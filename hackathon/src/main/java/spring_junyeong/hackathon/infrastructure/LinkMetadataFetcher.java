@@ -1,5 +1,6 @@
 package spring_junyeong.hackathon.infrastructure;
 
+import java.io.IOException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -7,8 +8,6 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 import spring_junyeong.hackathon.global.exception.ConnectionException;
 import spring_junyeong.hackathon.presentation.link.dto.LinkMetadata;
-
-import java.io.IOException;
 
 @Component
 public class LinkMetadataFetcher {
@@ -29,9 +28,9 @@ public class LinkMetadataFetcher {
             return statusCode >= SUCCESS_MIN_STATUS && statusCode <= SUCCESS_MAX_STATUS;
             
         } catch (IOException e) {
-            return false;
+          throw new ConnectionException("URL 통신에 실패했습니다.", e);
         } catch (IllegalArgumentException e) {
-            return false;
+          throw new ConnectionException("유효하지 않은 URL 형식입니다.", e);
         }
     }
 

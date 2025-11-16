@@ -1,15 +1,12 @@
 package spring_junyeong.hackathon.application;
 
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
-
-import javax.management.RuntimeErrorException;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import spring_junyeong.hackathon.domain.Folder;
 import spring_junyeong.hackathon.domain.Link;
+import spring_junyeong.hackathon.global.exception.FolderNotFoundException;
+import spring_junyeong.hackathon.global.exception.LinkNotFoundException;
 import spring_junyeong.hackathon.infrastructure.FolderRepository;
 import spring_junyeong.hackathon.infrastructure.LinkMetadataFetcher;
 import spring_junyeong.hackathon.infrastructure.LinkRepository;
@@ -22,61 +19,82 @@ import spring_junyeong.hackathon.presentation.link.dto.LinksResponse;
 @RequiredArgsConstructor
 public class LinkService {
 
-    private final LinkRepository linkRepository;
-    private final LinkMetadataFetcher linkMetadataFetcher;
-    private final FolderRepository folderRepository;
+  private final LinkRepository linkRepository;
+  private final LinkMetadataFetcher linkMetadataFetcher;
+  private final FolderRepository folderRepository;
 
-    public LinkResponse createLink(LinkRequest linkCreateRequest) {
-        String url = linkCreateRequest.getUrl();
-        linkMetadataFetcher.isUrlReachable(url);
-        LinkMetadata linkData = linkMetadataFetcher.fetchMetadata(url);
+  public LinkResponse createLink(LinkRequest linkCreateRequest) {
+    String url = linkCreateRequest.getUrl();
+    linkMetadataFetcher.isUrlReachable(url);
+    LinkMetadata linkData = linkMetadataFetcher.fetchMetadata(url);
 
-        Link link = new Link(linkCreateRequest.getUrl(), linkData.getTitle(), linkData.getImageSource(),
-                linkData.getDescription());
-        Folder folder = folderRepository.findById(linkCreateRequest.getFolderId()).orElseThrow();
+    Link link = new Link(linkCreateRequest.getUrl(), linkData.getTitle(), linkData.getImageSource(),
+        linkData.getDescription());
 
-        folder.addLink(link);
+    Folder folder = folderRepository.findById(linkCreateRequest.getFolderId())
+        .orElseThrow(() -> new FolderNotFoundException(linkCreateRequest.getFolderId()));
 
-        return new LinkResponse(link);
+    folder.addLink(link);
 
-    }
+    return new LinkResponse(link);
 
-    public LinksResponse getAllLinks() {
-        List<Link> links = linkRepository.findAll();
+  }
 
-        return new LinksResponse(links);
-    }
+  public LinksResponse getAllLinks(int page, int pageSize, String search) {
+    long offset = (long) page * pageSize;
 
-    public LinksResponse getLinksInFolder(Long folderId) {
-        Folder folder = folderRepository.findById(folderId).orElseThrow();
-        List<Link> list = folder.getLinks();
+    List<Folder> folders = folderRepository.findAll();
+    List<Link> links = search == null
+        ? folders.stream().flatMap(folder -> folder.getLinks().stream()).toList()
+        : folders.stream().flatMap(folder -> folder.getLinks().stream())
+            .filter(link -> link.isKeywordExist(search)).toList();
 
-        return new LinksResponse(list);
-    }
+    List<Link> filteredLinks = links.stream()
+        .skip(offset)
+        .limit(pageSize)
+        .toList();
 
-    public List<LinkResponse> getFavoriteLinks() {
-        return linkRepository.getFavorites().stream().map(link -> new LinkResponse(link)).toList();
-    }
+    return new LinksResponse(filteredLinks);
+  }
 
-    public LinkResponse updateLink(Long linkId, String url) {
-        Link link = linkRepository.findById(linkId).orElseThrow();
+  public LinksResponse getLinksInFolder(Long folderId) {
+    Folder folder = folderRepository.findById(folderId)
+        .orElseThrow(() -> new FolderNotFoundException(folderId));
 
-        linkMetadataFetcher.isUrlReachable(url);
+    List<Link> list = folder.getLinks();
 
-        link.updateUrl(url);
+    return new LinksResponse(list);
+  }
 
-        return new LinkResponse(link);
-    }
+  public List<LinkResponse> getFavoriteLinks() {
+    return linkRepository.getFavorites().stream().map(LinkResponse::new).toList();
+  }
 
-    public void removeLink(Long linkId) {
-        linkRepository.remove(linkId);
-    }
+  public LinkResponse updateLink(Long linkId, String url) {
+    Link link = linkRepository.findById(linkId)
+        .orElseThrow(() -> new LinkNotFoundException(linkId));
 
-    public LinkResponse toggleLinkFavorite(Long linkId) {
-        Link link = linkRepository.findById(linkId).orElseThrow();
-        link.toggleFavorite();
+    linkMetadataFetcher.isUrlReachable(url);
 
-        return new LinkResponse(link);
-    }
+    link.updateUrl(url);
+
+    return new LinkResponse(link);
+  }
+
+  public void removeLink(Long linkId) {
+    Link removeLink = linkRepository.findById(linkId)
+        .orElseThrow(() -> new LinkNotFoundException(linkId));
+
+    linkRepository.remove(linkId);
+  }
+
+  public LinkResponse toggleLinkFavorite(Long linkId) {
+    Link link = linkRepository.findById(linkId)
+        .orElseThrow(() -> new LinkNotFoundException(linkId));
+
+    link.toggleFavorite();
+
+    return new LinkResponse(link);
+  }
 
 }

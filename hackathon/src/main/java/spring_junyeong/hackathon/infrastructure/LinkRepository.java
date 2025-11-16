@@ -4,43 +4,40 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.springframework.stereotype.Repository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 import spring_junyeong.hackathon.domain.Link;
 
 @Repository
 @RequiredArgsConstructor
 public class LinkRepository {
-    private List<Link> links = new CopyOnWriteArrayList<>();
-    private AtomicLong sequence = new AtomicLong(0L);
 
-    public Link save(Link link, String folderName) {
-        link.setId(sequence.incrementAndGet());
+  private List<Link> links = new CopyOnWriteArrayList<>();
+  private AtomicLong sequence = new AtomicLong(0L);
 
-        links.add(link);
+  public Link save(Link link, String folderName) {
+    link.setId(sequence.incrementAndGet());
 
-        return link;
-    }
+    links.add(link);
 
-    public Optional<Link> findById(Long id) {
-        return links.stream().filter(link -> link.getId().equals(id)).findFirst();
-    }
+    return link;
+  }
 
-    public List<Link> findAll() {
-        return links;
-    }
+  public Optional<Link> findById(Long id) {
+    return links.stream().filter(link -> link.getId().equals(id)).findFirst();
+  }
 
-    public Link remove(Long linkId) {
-        Link link = findById(linkId).orElseThrow();
-        links.remove(link);
+  public List<Link> findAll() {
+    return links;
+  }
 
-        return link;
-    }
+  public void remove(Long linkId) {
+    Link link = findById(linkId).orElseThrow();
+    links.remove(link);
+  }
 
-    public List<Link> getFavorites() {
-        return links.stream().filter(link -> link.isFavorite()).toList();
-    }
+  public List<Link> getFavorites() {
+    return links.stream().filter(Link::isFavorite).toList();
+  }
 
 }
