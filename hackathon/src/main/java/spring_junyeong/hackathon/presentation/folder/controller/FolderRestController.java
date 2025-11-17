@@ -1,4 +1,4 @@
-package spring_junyeong.hackathon.presentation;
+package spring_junyeong.hackathon.presentation.folder.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;

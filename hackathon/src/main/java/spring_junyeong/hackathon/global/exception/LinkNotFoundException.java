@@ -6,5 +6,4 @@ public class LinkNotFoundException extends RuntimeException {
   public LinkNotFoundException(Long linkId) {
     super("링크 ID [" + linkId + "]에 해당하는 폴더를 찾을 수 없습니다.");
   }
-
 }

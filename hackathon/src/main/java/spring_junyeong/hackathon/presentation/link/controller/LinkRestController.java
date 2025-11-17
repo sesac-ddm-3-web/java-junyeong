@@ -1,4 +1,4 @@
-package spring_junyeong.hackathon.presentation;
+package spring_junyeong.hackathon.presentation.link.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
