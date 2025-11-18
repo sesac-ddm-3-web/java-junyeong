@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛍️ 주문 관리 API 테스터</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .container-card {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    .code-block {
+      min-height: 100px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 p-8">
+
+<div class="max-w-7xl mx-auto">
+  <h1 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">
+    🚀 Order Management API Test Console
+  </h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <div id="product-list" class="container-card bg-white p-6 rounded-xl border-t-4 border-indigo-500">
+      <h2 class="text-xl font-semibold mb-4 flex items-center">
+        <span class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">GET</span>
+        /products (상품 목록)
+      </h2>
+      <button onclick="fetchProducts()"
+              class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-150 font-medium">
+        상품 전체 조회
+      </button>
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-products">
+        [결과 대기 중]
+      </div>
+    </div>
+
+    <div id="order-create" class="container-card bg-white p-6 rounded-xl border-t-4 border-green-500">
+      <h2 class="text-xl font-semibold mb-4 flex items-center">
+        <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">POST</span>
+        /orders (주문 생성)
+      </h2>
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">요청 Body (JSON Array)</label>
+        <textarea id="order-request-body" rows="5"
+                  class="w-full border border-gray-300 p-2 rounded-lg focus:ring-green-500 focus:border-green-500 font-mono text-xs"
+                  placeholder='[{"id": 1, "amount": 2}, {"id": 2, "amount": 1}]'></textarea>
+      </div>
+      <button onclick="createOrder()"
+              class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-150 font-medium">
+        주문 생성 요청
+      </button>
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-create">
+        [결과 대기 중]
+      </div>
+    </div>
+
+    <div id="order-info" class="container-card bg-white p-6 rounded-xl border-t-4 border-blue-500">
+      <h2 class="text-xl font-semibold mb-4 flex items-center">
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">GET</span>
+        /orders/{orderId} (주문 상세)
+      </h2>
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Order ID</label>
+        <input type="number" id="order-id-info" placeholder="주문 번호 (Long)"
+               class="w-full border border-gray-300 p-2 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <button onclick="getOrderInfo()"
+              class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-150 font-medium">
+        주문 상세 조회
+      </button>
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-info">
+        [결과 대기 중]
+      </div>
+    </div>
+
+    <div id="order-by-state" class="container-card bg-white p-6 rounded-xl border-t-4 border-yellow-500">
+      <h2 class="text-xl font-semibold mb-4 flex items-center">
+        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">GET</span>
+        /orders?state={state}
+      </h2>
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Order Status</label>
+        <select id="order-state-query"
+                class="w-full border border-gray-300 p-2 rounded-lg focus:ring-yellow-500 focus:border-yellow-500">
+          <option value="CREATED">CREATED</option>
+          <option value="SHIPPING">SHIPPING</option>
+          <option value="COMPLETED">COMPLETED</option>
+          <option value="CANCELED">CANCELED</option>
+        </select>
+      </div>
+      <button onclick="getOrdersByState()"
+              class="w-full bg-yellow-600 text-white py-2 rounded-lg hover:bg-yellow-700 transition duration-150 font-medium">
+        상태별 주문 조회
+      </button>
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-by-state">
+        [결과 대기 중]
+      </div>
+    </div>
+
+    <div id="order-update-status" class="container-card bg-white p-6 rounded-xl border-t-4 border-orange-500">
+      <h2 class="text-xl font-semibold mb-4 flex items-center">
+        <span class="bg-orange-100 text-orange-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">PATCH</span>
+        /orders/{orderId} (상태 변경)
+      </h2>
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Order ID</label>
+        <input type="number" id="order-id-update" placeholder="주문 번호"
+               class="w-full border border-gray-300 p-2 rounded-lg focus:ring-orange-500 focus:border-orange-500 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">New Status</label>
+        <select id="order-state-update"
+                class="w-full border border-gray-300 p-2 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+          <option value="CREATED">CREATED</option>
+          <option value="SHIPPING">SHIPPING</option>
+          <option value="COMPLETED">COMPLETED</option>
+          <option value="CANCELED">CANCELED</option>
+        </select>
+      </div>
+      <button onclick="updateOrderStatus()"
+              class="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition duration-150 font-medium">
+        주문 상태 변경
+      </button>
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-update-status">
+        [결과 대기 중]
+      </div>
+    </div>
+
+    <div id="order-cancel" class="container-card bg-white p-6 rounded-xl border-t-4 border-red-500">
+      <h2 class="text-xl font-semibold mb-4 flex items-center">
+        <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">PATCH</span>
+        /orders/{orderId}/cancle
+      </h2>
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Order ID</label>
+        <input type="number" id="order-id-cancel" placeholder="주문 번호"
+               class="w-full border border-gray-300 p-2 rounded-lg focus:ring-red-500 focus:border-red-500">
+      </div>
+      <button onclick="cancelOrder()"
+              class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition duration-150 font-medium">
+        주문 취소 요청
+      </button>
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-cancel">
+        [결과 대기 중]
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const BASE_URL = 'http://localhost:8080';
+
+  // API 테스트 유틸리티 함수
+  async function sendRequest(method, url, body = null, resultElementId) {
+    const resultElement = document.getElementById(resultElementId);
+    resultElement.innerHTML = `<span class="text-gray-500">로딩 중...</span>`;
+
+    try {
+      const options = {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      if (body) {
+        options.body = JSON.stringify(body);
+      }
+
+      const response = await fetch(BASE_URL + url, options);
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        resultElement.classList.add('text-red-600');
+        resultElement.innerHTML = `⚠️ Error ${response.status}: ${data.message || JSON.stringify(data, null, 2)}`;
+      } else {
+        resultElement.classList.remove('text-red-600');
+        resultElement.innerHTML = JSON.stringify(data, null, 2);
+      }
+
+    } catch (error) {
+      resultElement.classList.add('text-red-600');
+      resultElement.innerHTML = `🚨 Network Error: ${error.message}`;
+    }
+  }
+
+  // 1. 모든 상품 조회
+  function fetchProducts() {
+    sendRequest('GET', '/products', null, 'result-products');
+  }
+
+  // 2. 상품 주문
+  function createOrder() {
+    const bodyText = document.getElementById('order-request-body').value.trim();
+    try {
+      const body = JSON.parse(bodyText);
+      sendRequest('POST', '/orders', body, 'result-order-create');
+    } catch (e) {
+      document.getElementById('result-order-create').innerHTML = "🚨 JSON 형식 오류: 요청 본문을 확인하세요.";
+    }
+  }
+
+  // 3. {orderId}로 주문 조회
+  function getOrderInfo() {
+    const orderId = document.getElementById('order-id-info').value;
+    if (orderId) {
+      sendRequest('GET', `/orders/${orderId}`, null, 'result-order-info');
+    } else {
+      document.getElementById('result-order-info').innerHTML = "주문 번호를 입력하세요.";
+    }
+  }
+
+  // 4. 특정 주문상태를 가지는 주문 조회
+  function getOrdersByState() {
+    const state = document.getElementById('order-state-query').value;
+    sendRequest('GET', `/orders?state=${state}`, null, 'result-order-by-state');
+  }
+
+  // 5. {orderId}에 해당하는 주문의 상태 강제 변경
+  function updateOrderStatus() {
+    const orderId = document.getElementById('order-id-update').value;
+    const newStatus = document.getElementById('order-state-update').value;
+    if (orderId) {
+      const body = { status: newStatus };
+      sendRequest('PATCH', `/orders/${orderId}`, body, 'result-order-update-status');
+    } else {
+      document.getElementById('result-order-update-status').innerHTML = "주문 번호를 입력하세요.";
+    }
+  }
+
+  // 6. {orderId}에 해당하는 주문 취소
+  function cancelOrder() {
+    const orderId = document.getElementById('order-id-cancel').value;
+    // 참고: 실제 API 엔드포인트는 /orders/{orderId}/cancle로 비 RESTful 형태로 되어있습니다.
+    // RESTful하게 구현했다면 PATCH /orders/{orderId}에 body: { status: "CANCELED" }를 보냈을 것입니다.
+    if (orderId) {
+      sendRequest('PATCH', `/orders/${orderId}/cancle`, null, 'result-order-cancel');
+    } else {
+      document.getElementById('result-order-cancel').innerHTML = "주문 번호를 입력하세요.";
+    }
+  }
+</script>
+</body>
+</html>
