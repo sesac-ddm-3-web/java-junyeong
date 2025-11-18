@@ -1,10 +1,19 @@
 package kr.co.ordermanagement.presentation.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import kr.co.ordermanagement.domain.order.Order;
 import lombok.Getter;
 
 @Getter
 public class OrderCreateRequest {
+
+  @NotNull(message = "id는 필수 값입니다.")
   private Long id;
+
+  @NotNull(message = "amount는 필수 값입니다.")
+  @Min(value = 1, message = "주문 수량은 1개 이상이어야 합니다.")
+  @Max(value = 50, message = "최대 주문 수량은 50개입니다.")
   private Integer amount;
 }
