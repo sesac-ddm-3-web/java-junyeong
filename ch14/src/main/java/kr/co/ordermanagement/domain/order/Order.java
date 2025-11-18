@@ -2,6 +2,7 @@ package kr.co.ordermanagement.domain.order;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,8 @@ public class Order {
   private OrderStatus state;
 
   public Order() {
+    this.orderedProducts = new CopyOnWriteArrayList<>();
+    this.totalPrice = 0.0;
     this.state = OrderStatus.CREATED;
   }
 

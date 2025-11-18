@@ -3,10 +3,11 @@ package kr.co.ordermanagement.presentation.dto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import kr.co.ordermanagement.domain.order.Order;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class OrderCreateRequest {
 
   @NotNull(message = "id는 필수 값입니다.")

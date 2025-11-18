@@ -6,6 +6,7 @@ import kr.co.ordermanagement.domain.exception.ErrorResponse;
 import kr.co.ordermanagement.domain.exception.InsufficientStockException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,6 +32,15 @@ public class GlobalExceptionHandler {
     String errorMessage = Objects.requireNonNull(ex.getBindingResult()
             .getFieldError())
         .getDefaultMessage();
+
+    ErrorResponse errorResponse = new ErrorResponse(errorMessage);
+
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ErrorResponse> handleJsonParsingExceptions(HttpMessageNotReadableException ex) {
+    String errorMessage = "요청 본문(JSON) 형식이 잘못되었거나 필드 타입이 일치하지 않습니다.";
 
     ErrorResponse errorResponse = new ErrorResponse(errorMessage);
 

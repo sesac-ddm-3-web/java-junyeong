@@ -82,6 +82,9 @@ public class SimpleOrderService {
     for (OrderCreateRequest request : orderCreateRequests) {
       Long productId = request.getId();
       Integer amount = request.getAmount();
+      if (amount == null) {
+        throw new IllegalArgumentException("주문 수량(amount)은 필수 값입니다. ");
+      }
       Product product = productRepository.findById(productId);
       if (product.getAmount() < amount) {
         throw new InsufficientStockException(String.format("%d번 상품의 수량이 부족합니다.", productId));

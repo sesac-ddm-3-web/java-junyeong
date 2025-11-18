@@ -23,7 +23,7 @@ public class OrderRestController {
 
   // 상품 주문 api
   @RequestMapping(value = "/orders", method = RequestMethod.POST)
-  public OrderResponse order(@Valid @RequestBody List<OrderCreateRequest> orderCreateRequests) {
+  public OrderResponse order(@RequestBody @Valid List<OrderCreateRequest> orderCreateRequests) {
     return simpleOrderService.createOrder(orderCreateRequests);
   }
 
@@ -41,7 +41,7 @@ public class OrderRestController {
 
   // {orderId}에 해당하는 주문의 상태를 강제로 변경하는 api
   @RequestMapping(value = "/orders/{orderId}", method = RequestMethod.PATCH)
-  public OrderResponse updateOrderStatus(@PathVariable Long orderId, @Valid @RequestBody OrderStateRequest orderStateRequest) {
+  public OrderResponse updateOrderStatus(@PathVariable Long orderId, @RequestBody @Valid OrderStateRequest orderStateRequest) {
     return simpleOrderService.updateOrderState(orderId, orderStateRequest);
   }
 
