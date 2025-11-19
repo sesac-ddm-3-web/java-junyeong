@@ -5,6 +5,7 @@ import java.util.List;
 import kr.co.ordermanagement.application.SimpleOrderService;
 import kr.co.ordermanagement.domain.order.OrderStatus;
 import kr.co.ordermanagement.presentation.dto.OrderCreateRequest;
+import kr.co.ordermanagement.presentation.dto.OrderCreateRequests;
 import kr.co.ordermanagement.presentation.dto.OrderResponse;
 import kr.co.ordermanagement.presentation.dto.OrderStateRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class OrderRestController {
 
   // 상품 주문 api
   @RequestMapping(value = "/orders", method = RequestMethod.POST)
-  public OrderResponse order(@RequestBody @Valid List<OrderCreateRequest> orderCreateRequests) {
+  public OrderResponse order(@RequestBody @Valid OrderCreateRequests orderCreateRequests) {
     return simpleOrderService.createOrder(orderCreateRequests);
   }
 

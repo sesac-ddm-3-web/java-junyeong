@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderStateRequest {
   @NotNull(message = "CREATED, SHIPPING, COMPLETED, CANCELED 중 하나여야 합니다.")
-  OrderStatus state;
+  OrderStatus status;
 
 }
