@@ -3,6 +3,7 @@ package kr.co.ordermanagement.domain.order;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,8 +24,11 @@ public class Order {
   }
 
   public void stateToCancel() {
-    if(this.state.equals(OrderStatus.CREATED)) this.state = OrderStatus.CANCELED;
-    else throw new IllegalStateException("이미 취소되었거나 취소할 수 없는 주문상태입니다.");
+    if (this.state.equals(OrderStatus.CREATED)) {
+      this.state = OrderStatus.CANCELED;
+    } else {
+      throw new IllegalStateException("이미 취소되었거나 취소할 수 없는 주문상태입니다.");
+    }
   }
 
   public Boolean sameId(Long orderId) {

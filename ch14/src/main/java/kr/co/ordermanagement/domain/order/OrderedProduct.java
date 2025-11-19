@@ -7,11 +7,13 @@ import lombok.Getter;
 @Getter
 public class OrderedProduct {
 
+  private Long id;
   private String name;
   private Integer price;
   private Integer amount;
 
   public OrderedProduct(Product product, OrderCreateRequest orderCreateRequest ) {
+    this.id = product.getId();
     this.name = product.getName();
     this.price = product.getPrice() * orderCreateRequest.getAmount();
     this.amount = orderCreateRequest.getAmount();

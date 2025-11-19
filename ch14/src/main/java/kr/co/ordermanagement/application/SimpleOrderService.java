@@ -53,7 +53,7 @@ public class SimpleOrderService {
   public OrderResponse updateOrderState(Long orderId, OrderStateRequest request) {
 
     Order order = orderRepository.findById(orderId).orElseThrow(
-        () -> new EntityNotFoundException(String.format("%d번 주문을 찾지 못했습니다.", orderId)));
+        () -> new EntityNotFoundException(String.format("Order를 찾지 못했습니다.", orderId)));
     order.setState(request.getStatus());
     return new OrderResponse(order);
   }

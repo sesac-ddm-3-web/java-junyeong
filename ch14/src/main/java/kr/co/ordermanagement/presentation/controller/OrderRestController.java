@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 import kr.co.ordermanagement.application.SimpleOrderService;
 import kr.co.ordermanagement.domain.order.OrderStatus;
-import kr.co.ordermanagement.presentation.dto.OrderCreateRequest;
 import kr.co.ordermanagement.presentation.dto.OrderCreateRequests;
 import kr.co.ordermanagement.presentation.dto.OrderResponse;
 import kr.co.ordermanagement.presentation.dto.OrderStateRequest;
@@ -47,7 +46,7 @@ public class OrderRestController {
   }
 
   // {orderId}에 해당하는 주문 취소 api
-  @RequestMapping(value = "/orders/{orderId}/cancle", method = RequestMethod.PATCH)
+  @RequestMapping(value = "/orders/{orderId}/cancel", method = RequestMethod.PATCH)
   public OrderResponse cancelOrder(@PathVariable Long orderId) {
     return simpleOrderService.cancelOrder(orderId);
   }

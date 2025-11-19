@@ -24,16 +24,18 @@ class OrdermanagementApplicationTests {
 	@DisplayName("1-1. 주문 생성 - 성공")
 	void test1_1() throws Exception {
 		byte[] body = """
-				[
-				    {
-				        "id": 1,
-				        "amount": 1
-				    },
-				    {
-				        "id": 3,
-				        "amount": 1
-				    }
-				]
+        {
+           "orders": [
+             {
+               "id": 1,
+               "amount": 1
+             },
+             {
+               "id": 3,
+               "amount": 1
+             }
+           ]
+         }
 				""".getBytes();
 
 		mockMvc.perform(
@@ -69,16 +71,18 @@ class OrdermanagementApplicationTests {
 	@DisplayName("1-2. 주문 생성 - 실패 (수량 부족)")
 	void test1_2() throws Exception {
 		byte[] body = """
-				[
-					{
-						"id": 1,
-						"amount": 99999
-					},
-					{
-						"id": 3,
-						"amount": 1
-					}
-				]
+        {
+           "orders": [
+             {
+               "id": 1,
+               "amount": 99999
+             },
+             {
+               "id": 3,
+               "amount": 1
+             }
+           ]
+         }
 				""".getBytes();
 
 		mockMvc.perform(
@@ -86,7 +90,7 @@ class OrdermanagementApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(body)
 				)
-				.andExpect(status().isInternalServerError())
+				.andExpect(status().isBadRequest())
 				.andExpect(content().json("""
 						{
 						    "message": "1번 상품의 수량이 부족합니다."
@@ -98,16 +102,18 @@ class OrdermanagementApplicationTests {
 	@DisplayName("1-3. 주문 생성 - 실패 (Product 찾지 못함)")
 	void test1_3() throws Exception {
 		byte[] body = """
-				[
-					{
-						"id": 99999,
-						"amount": 1
-					},
-					{
-						"id": 3,
-						"amount": 1
-					}
-				]
+        {
+           "orders": [
+             {
+               "id": 9999,
+               "amount": 1
+             },
+             {
+               "id": 3,
+               "amount": 1
+             }
+           ]
+         }
 				""".getBytes();
 
 		mockMvc.perform(
@@ -128,7 +134,7 @@ class OrdermanagementApplicationTests {
 	void test2_1() throws Exception {
 		byte[] body = """
 				{
-				    "state": "SHIPPING"
+				    "status": "SHIPPING"
 				}
 				""".getBytes();
 
@@ -166,7 +172,7 @@ class OrdermanagementApplicationTests {
 	void test2_1_init() throws Exception {
 		byte[] body = """
 				{
-				    "state": "CREATED"
+				    "status": "CREATED"
 				}
 				""".getBytes();
 
@@ -182,7 +188,7 @@ class OrdermanagementApplicationTests {
 	void test2_2() throws Exception {
 		byte[] body = """
 				{
-				    "state": "SHIPPING"
+				    "status": "SHIPPING"
 				}
 				""".getBytes();
 
@@ -323,7 +329,7 @@ class OrdermanagementApplicationTests {
 		mockMvc.perform(
 						MockMvcRequestBuilders.patch("/orders/1/cancel")
 				)
-				.andExpect(status().isInternalServerError())
+				.andExpect(status().isBadRequest())
 				.andExpect(content().json("""
 						{
 						    "message": "이미 취소되었거나 취소할 수 없는 주문상태입니다."
