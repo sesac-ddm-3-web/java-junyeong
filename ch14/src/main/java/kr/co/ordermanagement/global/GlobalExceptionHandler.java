@@ -1,6 +1,7 @@
 package kr.co.ordermanagement.global;
 
 import java.util.Objects;
+import kr.co.ordermanagement.domain.exception.CanNotCancellableStateException;
 import kr.co.ordermanagement.domain.exception.EntityNotFoundException;
 import kr.co.ordermanagement.domain.exception.ErrorResponse;
 import kr.co.ordermanagement.domain.exception.InsufficientStockException;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, IllegalStateException.class,
+  @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class,
+      IllegalStateException.class,
       InsufficientStockException.class})
   public ResponseEntity<ErrorResponse> handleBadRequestExceptions(Exception ex) {
     ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
@@ -28,7 +30,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+  public ResponseEntity<ErrorResponse> handleValidationExceptions(
+      MethodArgumentNotValidException ex) {
     String errorMessage = Objects.requireNonNull(ex.getBindingResult()
             .getFieldError())
         .getDefaultMessage();
@@ -39,11 +42,20 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<ErrorResponse> handleJsonParsingExceptions(HttpMessageNotReadableException ex) {
+  public ResponseEntity<ErrorResponse> handleJsonParsingExceptions(
+      HttpMessageNotReadableException ex) {
     String errorMessage = "요청 본문(JSON) 형식이 잘못되었거나 필드 타입이 일치하지 않습니다.";
 
     ErrorResponse errorResponse = new ErrorResponse(errorMessage);
 
     return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(CanNotCancellableStateException.class)
+  public ResponseEntity<ErrorResponse> handleCanNotCancellableState(
+      CanNotCancellableStateException ex
+  ) {
+    ErrorResponse errorMessageDto = new ErrorResponse(ex.getMessage());
+    return new ResponseEntity<>(errorMessageDto, HttpStatus.CONFLICT);
   }
 }

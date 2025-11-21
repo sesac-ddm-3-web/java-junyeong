@@ -3,10 +3,10 @@ package kr.co.ordermanagement.presentation.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import kr.co.ordermanagement.application.SimpleOrderService;
-import kr.co.ordermanagement.domain.order.OrderStatus;
+import kr.co.ordermanagement.domain.order.State;
 import kr.co.ordermanagement.presentation.dto.OrderCreateRequests;
 import kr.co.ordermanagement.presentation.dto.OrderResponse;
-import kr.co.ordermanagement.presentation.dto.OrderStateRequest;
+import kr.co.ordermanagement.presentation.dto.StateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,14 +35,15 @@ public class OrderRestController {
 
   // 특정 주문상태를 가지는 주문을 전부 조회할 수 있는 API
   @RequestMapping(value = "/orders", method = RequestMethod.GET)
-  public List<OrderResponse> getOrdersByState(@RequestParam("state") OrderStatus orderStatus) {
-    return simpleOrderService.getOrdersByState(orderStatus);
+  public List<OrderResponse> getOrdersByState(@RequestParam("state") State state) {
+    return simpleOrderService.getOrdersByState(state);
   }
 
   // {orderId}에 해당하는 주문의 상태를 강제로 변경하는 api
   @RequestMapping(value = "/orders/{orderId}", method = RequestMethod.PATCH)
-  public OrderResponse updateOrderStatus(@PathVariable Long orderId, @RequestBody @Valid OrderStateRequest orderStateRequest) {
-    return simpleOrderService.updateOrderState(orderId, orderStateRequest);
+  public OrderResponse updateOrderState(@PathVariable Long orderId,
+      @RequestBody @Valid StateRequest stateRequest) {
+    return simpleOrderService.updateOrderState(orderId, stateRequest);
   }
 
   // {orderId}에 해당하는 주문 취소 api

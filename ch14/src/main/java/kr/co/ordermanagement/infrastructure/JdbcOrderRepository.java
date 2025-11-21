@@ -7,8 +7,8 @@ import java.util.Optional;
 import kr.co.ordermanagement.domain.exception.EntityNotFoundException;
 import kr.co.ordermanagement.domain.order.Order;
 import kr.co.ordermanagement.domain.order.OrderRepository;
-import kr.co.ordermanagement.domain.order.OrderStatus;
 import kr.co.ordermanagement.domain.order.OrderedProduct;
+import kr.co.ordermanagement.domain.order.State;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -71,7 +71,7 @@ public class JdbcOrderRepository implements OrderRepository {
     List<Order> orders = jdbcTemplate.query(orderSql, (rs, rowNum) -> {
       // 사실 Long id와 같은 값이지만 서버가 클라이언트에게 받은 데이터가 실제 DB의 데이터와 동일하다고 볼 수 없기 때문에, 이러한 데이터 매핑을 해주는 책임이 Repo의 로직에 있어야 한다. (쿼리로 order를 받아와 그 안에 order_products를 가져오는 것) -> 일치 하지 않으면 옵셔널 던짐
       Long orderId = rs.getLong("id");
-      OrderStatus state = OrderStatus.valueOf(rs.getString("state"));
+      State state = State.valueOf(rs.getString("state"));
 
       String orderedProductSql = "SELECT product_id, name, price, amount FROM ordered_products WHERE order_id = ?";
       List<OrderedProduct> orderedProducts = jdbcTemplate.query(orderedProductSql,
@@ -92,12 +92,12 @@ public class JdbcOrderRepository implements OrderRepository {
   }
 
   @Override
-  public List<Order> findByStatus(OrderStatus orderStatus) {
+  public List<Order> fidByState(State state) {
     String orderSql = "SELECT * FROM orders WHERE state = ?";
 
     return jdbcTemplate.query(orderSql, (rs, rowNum) -> {
       Long orderId = rs.getLong("order_id");
-      OrderStatus state = OrderStatus.valueOf(rs.getString("state"));
+      State orderState = State.valueOf(rs.getString("state"));
 
       String orderedProductSql = "SELECT product_id, name, price, amount FROM ordered_products WHERE order_id = ?";
       List<OrderedProduct> orderedProducts = jdbcTemplate.query(orderedProductSql,
@@ -105,9 +105,9 @@ public class JdbcOrderRepository implements OrderRepository {
 
       Order order = new Order(orderedProducts);
       order.setId(orderId);
-      order.changeStateForce(state);
+      order.changeStateForce(orderState);
 
       return order;
-    }, orderStatus.name());
+    }, state.name());
   }
 }

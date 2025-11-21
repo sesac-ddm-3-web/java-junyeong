@@ -6,13 +6,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import kr.co.ordermanagement.domain.order.Order;
 import kr.co.ordermanagement.domain.order.OrderRepository;
-import kr.co.ordermanagement.domain.order.OrderStatus;
+import kr.co.ordermanagement.domain.order.State;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @Profile("list")
 public class ListOrderRepository implements OrderRepository {
+
   private List<Order> orderList = new CopyOnWriteArrayList<>();
   private AtomicLong orderIdGenerator = new AtomicLong(0L);
 
@@ -29,8 +30,8 @@ public class ListOrderRepository implements OrderRepository {
   }
 
   @Override
-  public List<Order> findByStatus(OrderStatus orderStatus) {
-    return orderList.stream().filter(order -> order.sameState(orderStatus)).toList();
+  public List<Order> findByState(State state) {
+    return orderList.stream().filter(order -> order.sameState(state)).toList();
   }
 
 }
