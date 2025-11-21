@@ -11,7 +11,7 @@ public class OrderResponse {
 
   private Long id;
   private List<OrderedProduct> orderedProducts;
-  private Double totalPrice;
+  private Integer totalPrice;
   private OrderStatus state;
 
   public OrderResponse(Order order) {

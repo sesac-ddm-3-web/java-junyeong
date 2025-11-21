@@ -2,9 +2,12 @@ package kr.co.ordermanagement.domain.order;
 
 import kr.co.ordermanagement.domain.product.Product;
 import kr.co.ordermanagement.presentation.dto.OrderCreateRequest;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@AllArgsConstructor
 public class OrderedProduct {
 
   private Long id;

@@ -13,13 +13,19 @@ public class Order {
   @Setter
   private Long id;
   private List<OrderedProduct> orderedProducts;
-  private Double totalPrice;
+  private Integer totalPrice;
   @Setter
   private OrderStatus state;
 
   public Order() {
     this.orderedProducts = new CopyOnWriteArrayList<>();
-    this.totalPrice = 0.0;
+    this.totalPrice = 0;
+    this.state = OrderStatus.CREATED;
+  }
+
+  public Order(List<OrderedProduct> orderedProducts) {
+    this.orderedProducts = orderedProducts;
+    this.totalPrice = orderedProducts.stream().mapToInt(OrderedProduct::getPrice).sum();
     this.state = OrderStatus.CREATED;
   }
 
@@ -29,6 +35,10 @@ public class Order {
     } else {
       throw new IllegalStateException("이미 취소되었거나 취소할 수 없는 주문상태입니다.");
     }
+  }
+
+  public void changeStateForce(OrderStatus orderStatus) {
+      this.state = orderStatus;
   }
 
   public Boolean sameId(Long orderId) {

@@ -9,6 +9,7 @@
     .container-card {
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
+
     .code-block {
       min-height: 100px;
       overflow-y: auto;
@@ -26,7 +27,8 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <div id="product-list" class="container-card bg-white p-6 rounded-xl border-t-4 border-indigo-500">
+    <div id="product-list"
+         class="container-card bg-white p-6 rounded-xl border-t-4 border-indigo-500">
       <h2 class="text-xl font-semibold mb-4 flex items-center">
         <span class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">GET</span>
         /products (상품 목록)
@@ -35,12 +37,14 @@
               class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition duration-150 font-medium">
         상품 전체 조회
       </button>
-      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-products">
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md"
+           id="result-products">
         [결과 대기 중]
       </div>
     </div>
 
-    <div id="order-create" class="container-card bg-white p-6 rounded-xl border-t-4 border-green-500">
+    <div id="order-create"
+         class="container-card bg-white p-6 rounded-xl border-t-4 border-green-500">
       <h2 class="text-xl font-semibold mb-4 flex items-center">
         <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">POST</span>
         /orders (주문 생성)
@@ -55,14 +59,16 @@
               class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-150 font-medium">
         주문 생성 요청
       </button>
-      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-create">
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md"
+           id="result-order-create">
         [결과 대기 중]
       </div>
     </div>
 
     <div id="order-info" class="container-card bg-white p-6 rounded-xl border-t-4 border-blue-500">
       <h2 class="text-xl font-semibold mb-4 flex items-center">
-        <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">GET</span>
+        <span
+            class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">GET</span>
         /orders/{orderId} (주문 상세)
       </h2>
       <div class="mb-3">
@@ -74,12 +80,14 @@
               class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-150 font-medium">
         주문 상세 조회
       </button>
-      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-info">
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md"
+           id="result-order-info">
         [결과 대기 중]
       </div>
     </div>
 
-    <div id="order-by-state" class="container-card bg-white p-6 rounded-xl border-t-4 border-yellow-500">
+    <div id="order-by-state"
+         class="container-card bg-white p-6 rounded-xl border-t-4 border-yellow-500">
       <h2 class="text-xl font-semibold mb-4 flex items-center">
         <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">GET</span>
         /orders?state={state}
@@ -98,12 +106,14 @@
               class="w-full bg-yellow-600 text-white py-2 rounded-lg hover:bg-yellow-700 transition duration-150 font-medium">
         상태별 주문 조회
       </button>
-      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-by-state">
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md"
+           id="result-order-by-state">
         [결과 대기 중]
       </div>
     </div>
 
-    <div id="order-update-status" class="container-card bg-white p-6 rounded-xl border-t-4 border-orange-500">
+    <div id="order-update-status"
+         class="container-card bg-white p-6 rounded-xl border-t-4 border-orange-500">
       <h2 class="text-xl font-semibold mb-4 flex items-center">
         <span class="bg-orange-100 text-orange-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">PATCH</span>
         /orders/{orderId} (상태 변경)
@@ -125,14 +135,16 @@
               class="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition duration-150 font-medium">
         주문 상태 변경
       </button>
-      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-update-status">
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md"
+           id="result-order-update-status">
         [결과 대기 중]
       </div>
     </div>
 
     <div id="order-cancel" class="container-card bg-white p-6 rounded-xl border-t-4 border-red-500">
       <h2 class="text-xl font-semibold mb-4 flex items-center">
-        <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">PATCH</span>
+        <span
+            class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">PATCH</span>
         /orders/{orderId}/cancle
       </h2>
       <div class="mb-3">
@@ -144,7 +156,8 @@
               class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition duration-150 font-medium">
         주문 취소 요청
       </button>
-      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md" id="result-order-cancel">
+      <div class="mt-4 text-sm text-gray-600 font-mono code-block bg-gray-50 p-3 rounded-md"
+           id="result-order-cancel">
         [결과 대기 중]
       </div>
     </div>
@@ -176,7 +189,8 @@
 
       if (!response.ok) {
         resultElement.classList.add('text-red-600');
-        resultElement.innerHTML = `⚠️ Error ${response.status}: ${data.message || JSON.stringify(data, null, 2)}`;
+        resultElement.innerHTML = `⚠️ Error ${response.status}: ${data.message || JSON.stringify(
+            data, null, 2)}`;
       } else {
         resultElement.classList.remove('text-red-600');
         resultElement.innerHTML = JSON.stringify(data, null, 2);
@@ -225,7 +239,7 @@
     const orderId = document.getElementById('order-id-update').value;
     const newStatus = document.getElementById('order-state-update').value;
     if (orderId) {
-      const body = { status: newStatus };
+      const body = {status: newStatus};
       sendRequest('PATCH', `/orders/${orderId}`, body, 'result-order-update-status');
     } else {
       document.getElementById('result-order-update-status').innerHTML = "주문 번호를 입력하세요.";
@@ -238,7 +252,7 @@
     // 참고: 실제 API 엔드포인트는 /orders/{orderId}/cancle로 비 RESTful 형태로 되어있습니다.
     // RESTful하게 구현했다면 PATCH /orders/{orderId}에 body: { status: "CANCELED" }를 보냈을 것입니다.
     if (orderId) {
-      sendRequest('PATCH', `/orders/${orderId}/cancle`, null, 'result-order-cancel');
+      sendRequest('PATCH', `/orders/${orderId}/cancel`, null, 'result-order-cancel');
     } else {
       document.getElementById('result-order-cancel').innerHTML = "주문 번호를 입력하세요.";
     }
