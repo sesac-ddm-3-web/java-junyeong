@@ -5,14 +5,14 @@ import kr.co.ordermanagement.domain.exception.EntityNotFoundException;
 import kr.co.ordermanagement.domain.exception.InsufficientStockException;
 import kr.co.ordermanagement.domain.order.Order;
 import kr.co.ordermanagement.domain.order.OrderRepository;
-import kr.co.ordermanagement.domain.order.OrderStatus;
 import kr.co.ordermanagement.domain.order.OrderedProduct;
+import kr.co.ordermanagement.domain.order.State;
 import kr.co.ordermanagement.domain.product.Product;
 import kr.co.ordermanagement.domain.product.ProductRepository;
 import kr.co.ordermanagement.presentation.dto.OrderCreateRequest;
 import kr.co.ordermanagement.presentation.dto.OrderCreateRequests;
 import kr.co.ordermanagement.presentation.dto.OrderResponse;
-import kr.co.ordermanagement.presentation.dto.OrderStateRequest;
+import kr.co.ordermanagement.presentation.dto.StateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,11 +50,11 @@ public class SimpleOrderService {
 
   }
 
-  public OrderResponse updateOrderState(Long orderId, OrderStateRequest request) {
+  public OrderResponse updateOrderState(Long orderId, StateRequest request) {
 
     Order order = orderRepository.findById(orderId).orElseThrow(
         () -> new EntityNotFoundException(String.format("Order를 찾지 못했습니다.", orderId)));
-    order.setState(request.getStatus());
+    order.setState(request.getState());
     return new OrderResponse(order);
   }
 
@@ -66,13 +66,14 @@ public class SimpleOrderService {
   }
 
 
-  public List<OrderResponse> getOrdersByState(OrderStatus status) {
-    List<Order> ordersFilteredStatus = orderRepository.findByStatus(status);
+  public List<OrderResponse> getOrdersByState(State state) {
+    List<Order> ordersFilteredStatus = orderRepository.findByState(state);
     return ordersFilteredStatus.stream().map(OrderResponse::new).toList();
   }
 
   public OrderResponse cancelOrder(Long orderId) {
-    Order order = orderRepository.findById(orderId).orElseThrow(()-> new EntityNotFoundException("Order를 찾지 못했습니다."));
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new EntityNotFoundException("Order를 찾지 못했습니다."));
     order.stateToCancel();
     return new OrderResponse(order);
   }

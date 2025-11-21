@@ -131,7 +131,7 @@
           <option value="CANCELED">CANCELED</option>
         </select>
       </div>
-      <button onclick="updateOrderStatus()"
+      <button onclick="updateOrderState()"
               class="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition duration-150 font-medium">
         주문 상태 변경
       </button>
@@ -235,7 +235,7 @@
   }
 
   // 5. {orderId}에 해당하는 주문의 상태 강제 변경
-  function updateOrderStatus() {
+  function updateOrderState() {
     const orderId = document.getElementById('order-id-update').value;
     const newStatus = document.getElementById('order-state-update').value;
     if (orderId) {
