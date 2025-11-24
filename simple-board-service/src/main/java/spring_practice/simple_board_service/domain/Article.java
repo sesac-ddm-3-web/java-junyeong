@@ -1,10 +1,12 @@
 package spring_practice.simple_board_service.domain;
 
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@AllArgsConstructor
 public class Article {
 
   @Setter
@@ -14,4 +16,5 @@ public class Article {
   private String title;
   private String content;
   private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }

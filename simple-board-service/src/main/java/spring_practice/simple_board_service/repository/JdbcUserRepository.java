@@ -59,4 +59,17 @@ public class JdbcUserRepository implements UserRepository {
     }
   }
 
+  @Override
+  public Optional<User> findByUserId(Long userId) {
+    String sql = "SELECT * FROM user WHERE id = ?";
+
+    try {
+      // queryForObject: 결과가 반드시 1개여야 할 때 사용. 0개일 경우 EmptyResultDataAccessException 발생.
+      User user = jdbcTemplate.queryForObject(sql, userRowMapper, userId);
+      return Optional.ofNullable(user);
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
+  }
+
 }

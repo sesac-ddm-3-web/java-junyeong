@@ -8,5 +8,7 @@ public interface UserRepository {
 
   public User add(User user);
 
+  public Optional<User> findByUserId(Long userId);
+
   public Optional<User> findByEmail(String email);
 }
