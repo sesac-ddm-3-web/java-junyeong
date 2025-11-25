@@ -2,12 +2,13 @@ package spring_practice.simple_board_service.config.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import spring_practice.simple_board_service.presentation.user.SignupRequest;
+import spring_practice.simple_board_service.presentation.auth.SignupRequest;
 
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, Object> {
 
   @Override
-  public void initialize(PasswordMatches constraintAnnotation) {}
+  public void initialize(PasswordMatches constraintAnnotation) {
+  }
 
   @Override
   public boolean isValid(Object obj, ConstraintValidatorContext context) {

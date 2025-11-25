@@ -1,10 +1,11 @@
-package spring_practice.simple_board_service.presentation.user;
+package spring_practice.simple_board_service.presentation.auth;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import spring_practice.simple_board_service.config.validation.PasswordMatches;
+import spring_practice.simple_board_service.domain.User;
 
 @Getter
 @PasswordMatches
@@ -23,4 +24,8 @@ public class SignupRequest {
   private String password;
 
   private String confirmPassword;
+
+  public User toEntity() {
+    return new User(this.getName(), this.getEmail(), this.getPassword());
+  }
 }

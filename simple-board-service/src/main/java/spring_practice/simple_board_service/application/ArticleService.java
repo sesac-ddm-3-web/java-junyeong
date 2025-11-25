@@ -48,10 +48,10 @@ public class ArticleService {
         .orElseThrow(UserNotFoundException::new);
 
     // 2. request에 대한 데이터로 article을 서버에서 생성 -> 이 때에는 id가 없어야 함, DB에서 가져와야 함(ex.KeyHolder)
-    Article article = new Article(request);
+    Article article = request.toEntity();
 
     // 3. article 영속성 관리 ( 어플리케이션 데이터 -> DB 데이터 )
-    article = articleRepository.add(article);
+    article = articleRepository.add(request.toEntity());
 
     // 4. 비로소 DB와 똑같아진 article을 Dto화 하여 return -> 서버에 생성된 article을 client에게 확인시켜줘야 함
     return new ArticleResponse(article);
