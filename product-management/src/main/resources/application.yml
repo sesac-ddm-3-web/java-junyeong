@@ -1,0 +1,4 @@
+jwt:
+  secretKey: 'v+L5Xg7mRjP9kHw2tF4yC6vB8zE1uA3sO0lIqNjKhGbAcFdTcRaZbYxWvU0T1S2R3Q4P5O6N7M8L9K'
+  expirationTime: 3600000
+

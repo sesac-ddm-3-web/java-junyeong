@@ -1,4 +1,4 @@
-package kr.co.hanbit.product.management.domain;
+package kr.co.hanbit.product.management.domain.exception;
 
 public class InvalidPasswordException extends RuntimeException {
 

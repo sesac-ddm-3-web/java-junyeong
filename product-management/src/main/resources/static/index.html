@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Boot Product & Auth Test Client</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom styles for better readability and structure */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+    }
+
+    .container {
+      max-width: 1200px;
+    }
+
+    .api-section {
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border-radius: 0.75rem; /* rounded-xl */
+    }
+
+    .api-section:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+      @apply bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150;
+    }
+
+    .btn-secondary {
+      @apply bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-150;
+    }
+  </style>
+</head>
+<body class="p-6">
+
+<div class="container mx-auto space-y-8">
+  <h1 class="text-4xl font-extrabold text-gray-900 text-center mb-6">
+    Spring Boot API Test Client
+  </h1>
+
+  <!-- 1. Global Status and Configuration -->
+  <div class="api-section bg-white p-6">
+    <h2 class="text-2xl font-semibold mb-4 text-indigo-700">인증 상태 및 설정</h2>
+    <div class="space-y-3">
+      <p>
+        <span class="font-medium">Backend Base URL:</span>
+        <code id="base-url" class="text-sm bg-gray-100 p-1 rounded">http://localhost:8080</code>
+      </p>
+      <div id="auth-status" class="p-3 rounded-lg border">
+        <p class="font-medium text-lg">현재 JWT 토큰:</p>
+        <code id="current-token" class="block text-sm break-all text-gray-600 mt-1">토큰 없음</code>
+        <button onclick="clearToken()" class="btn-secondary mt-3">토큰 삭제 (로그아웃)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- 2. Authentication Section -->
+    <div class="api-section bg-white p-6 space-y-6">
+      <h2 class="text-2xl font-semibold text-indigo-700">회원 인증 (Auth)</h2>
+
+      <!-- 2.1 Sign Up -->
+      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-xl font-medium mb-3 text-indigo-600">회원가입 (Sign Up) <code
+            class="text-sm bg-indigo-100 p-1 rounded">POST /api/auth/sign-up</code></h3>
+        <div class="space-y-2">
+          <!-- 이름 입력 필드 -->
+          <input type="text" id="signup-name" placeholder="이름 (Name)"
+                 class="w-full p-2 border rounded" value="홍길동">
+          <!-- 기존 필드 -->
+          <input type="email" id="signup-email" placeholder="이메일 (Email)"
+                 class="w-full p-2 border rounded" value="testuser@test.com">
+          <input type="password" id="signup-password" placeholder="비밀번호 (Password)"
+                 class="w-full p-2 border rounded" value="password123">
+          <input type="password" id="signup-confirmPassword" placeholder="비밀번호 확인"
+                 class="w-full p-2 border rounded" value="password123">
+          <button onclick="signUp()" class="btn-primary w-full">Sign Up & Get Token</button>
+        </div>
+      </div>
+
+      <!-- 2.2 Sign In -->
+      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-xl font-medium mb-3 text-indigo-600">로그인 (Sign In) <code
+            class="text-sm bg-indigo-100 p-1 rounded">POST /api/auth/sign-in</code></h3>
+        <div class="space-y-2">
+          <input type="email" id="signin-email" placeholder="이메일 (Email)"
+                 class="w-full p-2 border rounded" value="testuser@test.com">
+          <input type="password" id="signin-password" placeholder="비밀번호 (Password)"
+                 class="w-full p-2 border rounded" value="password123">
+          <button onclick="signIn()" class="btn-primary w-full">Sign In & Get Token</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Product CRUD Section -->
+    <div class="api-section bg-white p-6 space-y-6">
+      <h2 class="text-2xl font-semibold text-indigo-700">상품 CRUD (Product)</h2>
+
+      <!-- 3.1 Create Product -->
+      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-xl font-medium mb-3 text-indigo-600">상품 생성 <code
+            class="text-sm bg-indigo-100 p-1 rounded">POST /api/products</code> (Auth Required)</h3>
+        <div class="space-y-2">
+          <input type="text" id="create-name" placeholder="상품명 (Name)"
+                 class="w-full p-2 border rounded" value="테스트 상품">
+          <input type="number" id="create-price" placeholder="가격 (Price)"
+                 class="w-full p-2 border rounded" value="15000">
+          <input type="number" id="create-amount" placeholder="수량 (Amount)"
+                 class="w-full p-2 border rounded" value="100">
+          <button onclick="createProduct()" class="btn-primary w-full">Create Product</button>
+        </div>
+      </div>
+
+      <!-- 3.2 Read Product -->
+      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-xl font-medium mb-3 text-indigo-600">상품 조회 <code
+            class="text-sm bg-indigo-100 p-1 rounded">GET /api/products</code></h3>
+        <div class="space-y-2">
+          <button onclick="readAllProducts()" class="btn-secondary w-full">GET /products (전체 조회 - No
+            Auth)
+          </button>
+          <hr class="my-2 border-gray-300">
+          <input type="number" id="read-id" placeholder="ID로 단일 조회"
+                 class="w-full p-2 border rounded" value="1">
+          <button onclick="readProductById()" class="btn-primary w-full">GET /products/{id} (단일 조회 -
+            Auth Optional)
+          </button>
+        </div>
+      </div>
+
+      <!-- 3.3 Update & Delete Product -->
+      <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-xl font-medium mb-3 text-indigo-600">상품 수정/삭제 <code
+            class="text-sm bg-indigo-100 p-1 rounded">PUT/DELETE /api/products/{id}</code> (Auth
+          Required)</h3>
+        <div class="space-y-2">
+          <input type="number" id="crud-id" placeholder="수정/삭제할 Product ID"
+                 class="w-full p-2 border rounded" value="1">
+          <input type="text" id="update-name" placeholder="새 상품명 (New Name)"
+                 class="w-full p-2 border rounded" value="업데이트 상품명">
+          <input type="number" id="update-price" placeholder="새 가격 (New Price)"
+                 class="w-full p-2 border rounded" value="20000">
+          <input type="number" id="update-amount" placeholder="새 수량 (New Amount)"
+                 class="w-full p-2 border rounded" value="50">
+          <div class="flex space-x-2">
+            <button onclick="updateProduct()"
+                    class="btn-primary w-1/2 bg-yellow-600 hover:bg-yellow-700">Update (PUT)
+            </button>
+            <button onclick="deleteProduct()"
+                    class="btn-secondary w-1/2 bg-red-600 hover:bg-red-700">Delete (DELETE)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Result Output -->
+  <div class="api-section bg-gray-800 p-6">
+    <h2 class="text-2xl font-semibold mb-4 text-white">API 응답 결과</h2>
+    <pre id="api-result" class="bg-black text-green-400 p-4 rounded-lg overflow-x-auto text-sm">결과가 여기에 표시됩니다.</pre>
+  </div>
+
+</div>
+
+<script>
+  const BASE_URL = 'http://localhost:8080';
+  const resultEl = document.getElementById('api-result');
+  const tokenEl = document.getElementById('current-token');
+
+  // --- 1. JWT Token Management ---
+
+  function getOrSetToken(token = null) {
+    if (token) {
+      localStorage.setItem('jwtToken', token);
+    }
+    return localStorage.getItem('jwtToken');
+  }
+
+  function updateAuthStatus() {
+    const token = getOrSetToken();
+    tokenEl.textContent = token ? `Bearer ${token}` : '토큰 없음 (인증되지 않음)';
+    tokenEl.classList.toggle('text-gray-600', !token);
+    tokenEl.classList.toggle('text-green-500', !!token);
+  }
+
+  function clearToken() {
+    localStorage.removeItem('jwtToken');
+    updateAuthStatus();
+    displayResult({message: "토큰이 삭제되었습니다. 로그아웃 상태입니다."}, "info");
+  }
+
+  // --- 2. Utility Functions ---
+
+  function displayResult(data, type = 'success') {
+    let colorClass = 'text-green-400';
+    if (type === 'error') {
+      colorClass = 'text-red-400';
+    }
+    if (type === 'info') {
+      colorClass = 'text-yellow-400';
+    }
+
+    resultEl.className = `bg-black p-4 rounded-lg overflow-x-auto text-sm ${colorClass}`;
+    resultEl.textContent = JSON.stringify(data, null, 2);
+  }
+
+  async function safeFetch(url, options = {}) {
+    try {
+      const response = await fetch(url, options);
+      const isJson = response.headers.get('content-type')?.includes('application/json');
+      // 응답 본문이 비어있으면 JSON 파싱을 시도하지 않음
+      const data = (response.status !== 204 && response.headers.get('content-length') !== '0')
+          ? (isJson ? await response.json() : await response.text())
+          : null;
+
+      if (!response.ok) {
+        displayResult({
+          status: response.status,
+          statusText: response.statusText,
+          error: data || "서버 에러 (응답 본문 없음)"
+        }, 'error');
+        return null;
+      }
+      return data;
+
+    } catch (error) {
+      displayResult({error: "네트워크 오류 발생", detail: error.message}, 'error');
+      return null;
+    }
+  }
+
+  // --- 3. Core Request Handlers ---
+
+  // 상품 API 호출 (ProductController의 /api/products와 일치)
+  async function makeProductRequest(method, path, body = null) {
+    const token = getOrSetToken();
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    } else if (path.includes('/products') && method !== 'GET') {
+      // POST, PUT, DELETE /products는 토큰이 없으면 실패 예상 (GET /products는 예외)
+      displayResult(
+          {error: "인증 실패 예상", message: `요청 (${method} ${path})은 토큰이 필요합니다. 401 응답을 받을 수 있습니다.`},
+          'error');
+    }
+
+    const options = {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : null,
+    };
+
+    // ProductController의 @RequestMapping("/api/products")에 맞춰 경로 설정
+    const url = `${BASE_URL}/api${path}`;
+    const result = await safeFetch(url, options);
+    if (result) {
+      displayResult(result);
+    }
+    return result;
+  }
+
+  // 인증 API 호출 (UserController의 /api/auth와 일치하도록 수정)
+  async function makeAuthRequest(path, body) {
+    const options = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    };
+
+    // **핵심 수정: UserController의 @RequestMapping("/api/auth")에 맞춰 경로 설정**
+    const url = `${BASE_URL}/api/auth${path}`;
+    const result = await safeFetch(url, options);
+
+    if (result && result.accessToken) {
+      getOrSetToken(result.accessToken);
+      updateAuthStatus();
+      displayResult({
+        message: `로그인/회원가입 성공. 토큰이 저장되었습니다.`,
+        token: result.accessToken,
+        result: result
+      });
+    }
+    return result;
+  }
+
+  // --- 4. Event Handlers (Auth) ---
+
+  function signUp() {
+    // 이름 필드 값 가져오기
+    const name = document.getElementById('signup-name').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const confirmPassword = document.getElementById('signup-confirmPassword').value;
+
+    if (password !== confirmPassword) {
+      displayResult({error: "비밀번호 불일치", message: "비밀번호와 확인 비밀번호가 일치하지 않습니다."}, 'error');
+      return;
+    }
+
+    // name 필드를 포함하여 요청 본문 생성
+    makeAuthRequest('/sign-up', {name, email, password, confirmPassword});
+  }
+
+  function signIn() {
+    const email = document.getElementById('signin-email').value;
+    const password = document.getElementById('signin-password').value;
+    makeAuthRequest('/sign-in', {email, password});
+  }
+
+  // --- 5. Event Handlers (Product CRUD) ---
+
+  async function createProduct() {
+    const name = document.getElementById('create-name').value;
+    const price = parseInt(document.getElementById('create-price').value);
+    const amount = parseInt(document.getElementById('create-amount').value);
+
+    const productDto = {name, price, amount};
+    await makeProductRequest('POST', '/products', productDto);
+  }
+
+  async function readAllProducts() {
+    // No Auth required
+    await makeProductRequest('GET', '/products');
+  }
+
+  async function readProductById() {
+    const id = document.getElementById('read-id').value;
+    // Auth required (Optional depending on your backend setup)
+    await makeProductRequest('GET', `/products/${id}`);
+  }
+
+  async function updateProduct() {
+    const id = document.getElementById('crud-id').value;
+    const name = document.getElementById('update-name').value;
+    const price = parseInt(document.getElementById('update-price').value);
+    const amount = parseInt(document.getElementById('update-amount').value);
+
+    const productDto = {name, price, amount};
+    // Auth required
+    await makeProductRequest('PUT', `/products/${id}`, productDto);
+  }
+
+  async function deleteProduct() {
+    const id = document.getElementById('crud-id').value;
+    // Auth required
+    await makeProductRequest('DELETE', `/products/${id}`);
+  }
+
+  // Initialize status on load
+  window.onload = updateAuthStatus;
+
+</script>
+</body>
+</html>
