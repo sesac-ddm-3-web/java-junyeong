@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.repository;
+package spring_practice.simple_board_service.infrastructure;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -103,7 +103,9 @@ public class JdbcArticleRepository implements ArticleRepository {
 
   @Override
   public List<Article> findBySearchKeyword(String search) {
-    return List.of();
+    String sql = "SELECT * from article WHEE title LIKE ?";
+
+    return jdbcTemplate.query(sql, articleRowMapper);
   }
 
   public Optional<Article> findById(Long articleId) {

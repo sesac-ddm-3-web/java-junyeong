@@ -3,6 +3,7 @@ package spring_practice.simple_board_service.application.auth;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -70,5 +71,22 @@ public class TokenService {
         .parseClaimsJws(token);
 
     return claimsJws.getBody();
+  }
+
+  public Long getUserIdFromToken(String token) {
+    // 1. 토큰 유효성 검사 (validateToken과 로직 중복 피하기 위해 validate를 여기서 사용하거나,
+    //    getClaims에서 발생하는 예외에 의존할 수 있습니다. 여기서는 getClaims 사용)
+    Claims claims = getClaims(token);
+
+    // 2. Subject(ID)를 가져와 Long으로 변환합니다.
+    String userIdString = claims.getSubject();
+
+    // 3. Optional: null 체크나 빈 문자열 체크 추가
+    if (userIdString == null || userIdString.isBlank()) {
+      throw new JwtException("토큰에 유효한 사용자 ID(Subject)가 없습니다.");
+    }
+
+    // 4. Long 타입으로 변환 후 반환
+    return Long.parseLong(userIdString);
   }
 }

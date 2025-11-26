@@ -17,4 +17,14 @@ public class Article {
   private String content;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+
+  public void update(String title, String content) {
+    this.title = title;
+    this.content = content;
+    this.updatedAt = LocalDateTime.now();
+  }
+
+  public Boolean isAuthorEqual(Long userId) {
+    return this.authorId.equals(userId);
+  }
 }

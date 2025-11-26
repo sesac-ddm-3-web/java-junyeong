@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.repository;
+package spring_practice.simple_board_service.infrastructure;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
