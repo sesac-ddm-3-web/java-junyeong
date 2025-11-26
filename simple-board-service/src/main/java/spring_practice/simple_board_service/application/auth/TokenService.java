@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.application;
+package spring_practice.simple_board_service.application.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import spring_practice.simple_board_service.domain.User;
+import spring_practice.simple_board_service.domain.auth.User;
 import spring_practice.simple_board_service.presentation.auth.AccessToken;
 
 @Service

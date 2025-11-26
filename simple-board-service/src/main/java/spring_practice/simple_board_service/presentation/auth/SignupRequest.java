@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import spring_practice.simple_board_service.config.validation.PasswordMatches;
-import spring_practice.simple_board_service.domain.User;
+import spring_practice.simple_board_service.common.validation.PasswordMatches;
+import spring_practice.simple_board_service.domain.auth.User;
 
 @Getter
 @PasswordMatches

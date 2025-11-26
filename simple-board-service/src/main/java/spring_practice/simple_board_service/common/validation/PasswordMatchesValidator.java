@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.config.validation;
+package spring_practice.simple_board_service.common.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

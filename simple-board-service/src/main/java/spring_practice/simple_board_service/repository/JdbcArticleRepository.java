@@ -12,9 +12,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import spring_practice.simple_board_service.domain.Article;
-import spring_practice.simple_board_service.domain.ArticleRepository;
-import spring_practice.simple_board_service.exception.ArticleNotFoundException;
+import spring_practice.simple_board_service.common.exception.ArticleNotFoundException;
+import spring_practice.simple_board_service.domain.article.Article;
+import spring_practice.simple_board_service.domain.article.ArticleRepository;
 
 @Repository
 @RequiredArgsConstructor

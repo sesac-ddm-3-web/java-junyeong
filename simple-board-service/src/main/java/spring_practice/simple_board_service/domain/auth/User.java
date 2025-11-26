@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.domain;
+package spring_practice.simple_board_service.domain.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User {
 
-  @Setter private Long id;
+  @Setter
+  private Long id;
   private String name;
   private String email;
   private String password;

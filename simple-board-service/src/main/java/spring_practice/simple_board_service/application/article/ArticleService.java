@@ -1,14 +1,14 @@
-package spring_practice.simple_board_service.application;
+package spring_practice.simple_board_service.application.article;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import spring_practice.simple_board_service.domain.Article;
-import spring_practice.simple_board_service.domain.ArticleRepository;
-import spring_practice.simple_board_service.domain.User;
-import spring_practice.simple_board_service.domain.UserRepository;
-import spring_practice.simple_board_service.exception.ArticleNotFoundException;
-import spring_practice.simple_board_service.exception.UserNotFoundException;
+import spring_practice.simple_board_service.domain.article.Article;
+import spring_practice.simple_board_service.domain.article.ArticleRepository;
+import spring_practice.simple_board_service.domain.auth.User;
+import spring_practice.simple_board_service.domain.auth.UserRepository;
+import spring_practice.simple_board_service.common.exception.ArticleNotFoundException;
+import spring_practice.simple_board_service.common.exception.UserNotFoundException;
 import spring_practice.simple_board_service.presentation.article.ArticleCreateRequest;
 import spring_practice.simple_board_service.presentation.article.ArticleResponse;
 import spring_practice.simple_board_service.presentation.article.ArticlesResponse;

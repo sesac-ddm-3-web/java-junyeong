@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import spring_practice.simple_board_service.domain.User;
-import spring_practice.simple_board_service.domain.UserRepository;
+import spring_practice.simple_board_service.domain.auth.User;
+import spring_practice.simple_board_service.domain.auth.UserRepository;
 
 @Repository
 @Profile("jdbc")

@@ -2,7 +2,7 @@ package spring_practice.simple_board_service.presentation.article;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
-import spring_practice.simple_board_service.domain.Article;
+import spring_practice.simple_board_service.domain.article.Article;
 
 @Getter
 public class ArticleResponse {

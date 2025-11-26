@@ -1,7 +1,7 @@
 package spring_practice.simple_board_service.presentation.auth;
 
 import lombok.Getter;
-import spring_practice.simple_board_service.domain.User;
+import spring_practice.simple_board_service.domain.auth.User;
 
 @Getter
 public class UserResponse {

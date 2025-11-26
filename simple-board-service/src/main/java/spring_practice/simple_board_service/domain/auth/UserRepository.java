@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.domain;
+package spring_practice.simple_board_service.domain.auth;
 
 import java.util.Optional;
 import org.springframework.stereotype.Repository;

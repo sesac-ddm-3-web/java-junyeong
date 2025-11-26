@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.filter;
+package spring_practice.simple_board_service.common.filter;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -8,9 +8,9 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import spring_practice.simple_board_service.application.TokenService;
-import spring_practice.simple_board_service.domain.AuthenticationContext;
-import spring_practice.simple_board_service.domain.UserPrincipal;
+import spring_practice.simple_board_service.application.auth.TokenService;
+import spring_practice.simple_board_service.domain.auth.AuthenticationContext;
+import spring_practice.simple_board_service.domain.auth.UserPrincipal;
 
 /**
  * JWT 토큰을 추출하고 검증하여, 유효한 경우 사용자 정보를 AuthenticationContext에 설정하는 필터.

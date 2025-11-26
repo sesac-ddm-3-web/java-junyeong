@@ -1,12 +1,12 @@
-package spring_practice.simple_board_service.application;
+package spring_practice.simple_board_service.application.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import spring_practice.simple_board_service.domain.User;
-import spring_practice.simple_board_service.domain.UserRepository;
-import spring_practice.simple_board_service.exception.InvalidPasswordException;
-import spring_practice.simple_board_service.exception.UserAlreadyExistException;
-import spring_practice.simple_board_service.exception.UserNotFoundException;
+import spring_practice.simple_board_service.common.exception.InvalidPasswordException;
+import spring_practice.simple_board_service.common.exception.UserAlreadyExistException;
+import spring_practice.simple_board_service.common.exception.UserNotFoundException;
+import spring_practice.simple_board_service.domain.auth.User;
+import spring_practice.simple_board_service.domain.auth.UserRepository;
 import spring_practice.simple_board_service.presentation.auth.AccessToken;
 import spring_practice.simple_board_service.presentation.auth.SignInRequest;
 import spring_practice.simple_board_service.presentation.auth.SignupRequest;

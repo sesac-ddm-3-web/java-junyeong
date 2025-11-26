@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.domain;
+package spring_practice.simple_board_service.domain.article;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
