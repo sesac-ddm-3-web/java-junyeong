@@ -103,9 +103,9 @@ public class JdbcArticleRepository implements ArticleRepository {
 
   @Override
   public List<Article> findBySearchKeyword(String search) {
-    String sql = "SELECT * from article WHEE title LIKE ?";
+    String sql = "SELECT * from article WHERE title LIKE ?";
 
-    return jdbcTemplate.query(sql, articleRowMapper);
+    return jdbcTemplate.query(sql, articleRowMapper, "%" + search + "%");
   }
 
   public Optional<Article> findById(Long articleId) {

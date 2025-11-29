@@ -18,6 +18,13 @@ public class Article {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
+  public Article(String title, String content) {
+    this.title = title;
+    this.content = content;
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = null;
+  }
+
   public void update(String title, String content) {
     this.title = title;
     this.content = content;

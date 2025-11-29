@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.presentation.article;
+package spring_practice.simple_board_service.presentation.article.dto;
 
 import java.time.LocalDateTime;
 import lombok.Getter;

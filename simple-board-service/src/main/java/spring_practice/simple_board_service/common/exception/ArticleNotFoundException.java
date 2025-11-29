@@ -7,7 +7,7 @@ public class ArticleNotFoundException extends RuntimeException {
   }
 
   public ArticleNotFoundException(Long articleId) {
-    super(articleId + " ID에 해당하는 게시글을 찾지 못했습니다.");
+    super("ID " + articleId + "에 해당하는 게시글을 찾지 못했습니다.");
   }
 
   public ArticleNotFoundException(String message) {

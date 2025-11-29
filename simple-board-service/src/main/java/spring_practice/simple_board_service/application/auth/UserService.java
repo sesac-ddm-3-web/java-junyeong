@@ -7,9 +7,9 @@ import spring_practice.simple_board_service.common.exception.UserAlreadyExistExc
 import spring_practice.simple_board_service.common.exception.UserNotFoundException;
 import spring_practice.simple_board_service.domain.auth.User;
 import spring_practice.simple_board_service.domain.auth.UserRepository;
-import spring_practice.simple_board_service.presentation.auth.AccessToken;
-import spring_practice.simple_board_service.presentation.auth.SignInRequest;
-import spring_practice.simple_board_service.presentation.auth.SignupRequest;
+import spring_practice.simple_board_service.presentation.auth.dto.AccessToken;
+import spring_practice.simple_board_service.presentation.auth.dto.SignInRequest;
+import spring_practice.simple_board_service.presentation.auth.dto.SignupRequest;
 
 @Service
 @RequiredArgsConstructor

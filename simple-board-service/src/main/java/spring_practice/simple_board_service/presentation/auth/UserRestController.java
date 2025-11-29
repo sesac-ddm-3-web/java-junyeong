@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring_practice.simple_board_service.application.auth.UserService;
+import spring_practice.simple_board_service.presentation.auth.dto.AccessToken;
+import spring_practice.simple_board_service.presentation.auth.dto.SignInRequest;
+import spring_practice.simple_board_service.presentation.auth.dto.SignupRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class UserRestController {
 
   private final UserService userService;

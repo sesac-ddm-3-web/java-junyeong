@@ -1,14 +1,16 @@
-package spring_practice.simple_board_service.presentation.auth;
+package spring_practice.simple_board_service.presentation.auth.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import spring_practice.simple_board_service.common.validation.PasswordMatches;
 import spring_practice.simple_board_service.domain.auth.User;
 
 @Getter
 @PasswordMatches
+@NoArgsConstructor
 public class SignupRequest {
 
   @NotNull(message = "이름은 필수 값입니다.")

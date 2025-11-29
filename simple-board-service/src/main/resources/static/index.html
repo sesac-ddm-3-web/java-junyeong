@@ -1,10 +1,726 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>세련된 심플 게시판</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 커스텀 테마 색상 설정 */
+    :root {
+      --color-primary: #6B46C1; /* Indigo-700 계열 */
+      --color-primary-light: #805AD5;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f6f9;
+    }
+
+    .container {
+      max-width: 900px; /* 중앙 정렬 및 적절한 너비 */
+    }
+
+    .view-container > div:not(.active) {
+      display: none;
+    }
+
+    .view-container > div.active {
+      display: block;
+    }
+
+    .card-gradient {
+      /* 이미지와 유사한 보라색 그라데이션 */
+      background: linear-gradient(135deg, #805AD5 0%, #6B46C1 100%);
+      color: white;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: white;
+      transition: background-color 0.15s;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-primary-light);
+    }
+  </style>
 </head>
-<body>
-$END$
+<body class="p-4 md:p-8">
+
+<div class="container mx-auto">
+  <header class="flex justify-between items-center mb-6 border-b border-gray-200 pb-4">
+    <h1 class="text-3xl font-extrabold text-gray-800 cursor-pointer"
+        onclick="showView('main-view')">
+      <span class="text-indigo-700">|</span> 게시판
+    </h1>
+    <div id="auth-controls" class="flex items-center space-x-4">
+    </div>
+  </header>
+
+  <div class="view-container">
+
+    <div id="main-view" class="active bg-white rounded-xl shadow-lg mb-6 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-gray-700">전체 게시글</h2>
+        <div class="flex space-x-2">
+          <input type="text" id="article-search" placeholder="검색어 입력"
+                 class="p-2 border border-gray-300 rounded-lg text-sm w-48">
+          <button onclick="fetchArticles()"
+                  class="bg-gray-700 hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition duration-150 text-sm">
+            조회
+          </button>
+          <button onclick="showView('create-article-view')"
+                  class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 text-sm">
+            새 글 작성
+          </button>
+        </div>
+      </div>
+
+      <div id="article-list" class="space-y-3">
+      </div>
+    </div>
+
+    <div id="create-article-view" class="bg-white rounded-xl shadow-lg mb-6 p-6">
+      <h2 class="text-2xl font-bold mb-4 text-indigo-600">➕ 새 글 작성</h2>
+      <input type="text" id="article-title" placeholder="제목"
+             class="w-full p-3 mb-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      <textarea id="article-content" placeholder="내용"
+                class="w-full p-3 mb-4 border border-gray-300 rounded-lg h-40 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+      <div class="flex justify-end space-x-2">
+        <button onclick="showView('main-view')"
+                class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg transition duration-150">
+          취소
+        </button>
+        <button onclick="createArticleHandler()"
+                class="btn-primary font-bold py-2 px-4 rounded-lg transition duration-150">
+          게시글 등록
+        </button>
+      </div>
+    </div>
+
+    <div id="detail-view" class="bg-white rounded-xl shadow-lg mb-6 p-6">
+      <div class="mb-4">
+        <button onclick="showView('main-view')"
+                class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          목록으로
+        </button>
+      </div>
+
+      <div id="article-detail-content" class="mb-8 p-4 border rounded-lg bg-gray-50">
+      </div>
+
+      <div id="article-control-buttons" class="flex justify-end space-x-2 mb-8">
+      </div>
+
+      <h3 class="text-xl font-bold mt-8 mb-4 border-t pt-4 text-gray-700">
+        <span class="text-indigo-600">댓글</span> (<span id="comment-count">0</span>)
+      </h3>
+      <div id="comment-list" class="space-y-4">
+      </div>
+
+      <div class="mt-6 border-t pt-4" id="comment-form-area">
+        <h4 class="text-lg font-semibold mb-2 text-gray-700">댓글 작성</h4>
+        <textarea id="comment-text-post" placeholder="댓글 내용을 입력하세요."
+                  class="w-full p-2 mb-3 border rounded-lg h-20 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        <button onclick="createCommentHandler(currentArticleId)"
+                class="w-full btn-primary font-bold py-2 rounded-lg transition duration-150">
+          댓글 등록
+        </button>
+      </div>
+
+    </div>
+
+    <div id="auth-view" class="bg-white rounded-xl shadow-lg mb-6 p-6 max-w-sm mx-auto">
+      <div id="auth-content">
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ⭐️ 전역 변수 및 상태
+  let jwtToken = '';
+  let currentArticleId = null;
+  let currentEditingCommentId = null;
+  let currentAuthMode = 'signin';
+  let currentUserId = null;
+
+  // --- Utility Functions ---
+
+  /**
+   * 토큰에서 userId를 추출하여 전역 변수에 저장합니다.
+   */
+  function updateUserIdFromToken() {
+    currentUserId = null;
+    if (!jwtToken) {
+      return;
+    }
+    try {
+      const payload = JSON.parse(atob(jwtToken.split('.')[1]));
+      // 토큰 페이로드에서 userId를 'sub' 또는 'userId'로 가정하여 파싱
+      currentUserId = payload.sub ? parseInt(payload.sub) : payload.userId ? parseInt(
+          payload.userId) : null;
+    } catch (e) {
+      console.error("Failed to decode token:", e);
+    }
+  }
+
+  /**
+   * 토큰을 설정하고 UI 및 localStorage에 저장합니다.
+   */
+  function setToken(token) {
+    jwtToken = token.trim();
+
+    if (jwtToken) {
+      localStorage.setItem('jwt_access_token', jwtToken);
+    } else {
+      localStorage.removeItem('jwt_access_token');
+    }
+
+    updateUserIdFromToken();
+
+    // UI 업데이트 (인증 상태)
+    updateAuthControls();
+  }
+
+  /**
+   * 뷰 전환 함수
+   */
+  function showView(viewId) {
+    document.querySelectorAll('.view-container > div').forEach(div => {
+      div.classList.remove('active');
+    });
+    document.getElementById(viewId).classList.add('active');
+
+    if (viewId === 'main-view') {
+      fetchArticles();
+    } else if (viewId === 'auth-view') {
+      renderAuthView(currentAuthMode);
+    }
+  }
+
+  /**
+   * 인증 상태에 따라 헤더 버튼을 업데이트합니다.
+   */
+  function updateAuthControls() {
+    const controls = document.getElementById('auth-controls');
+    controls.innerHTML = '';
+
+    if (jwtToken && currentUserId) {
+      controls.innerHTML = `
+            <span class="text-sm font-semibold text-gray-600">user${currentUserId}</span>
+            <button onclick="signOut()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-3 rounded-lg transition duration-150 text-sm">
+                로그아웃
+            </button>
+        `;
+    } else {
+      controls.innerHTML = `
+            <button onclick="showView('auth-view')" class="btn-primary font-medium py-2 px-3 rounded-lg transition duration-150 text-sm">
+                로그인 / 회원가입
+            </button>
+        `;
+    }
+
+    updateCommentFormVisibility();
+  }
+
+  /**
+   * 로그아웃 처리
+   */
+  function signOut() {
+    setToken('');
+    updateAuthControls();
+    showView('main-view');
+    console.log("로그아웃 완료.");
+  }
+
+  // --- 렌더링 함수 ---
+
+  /**
+   * ⭐️ 인증 뷰 렌더링 (이벤트 리스너를 명시적으로 연결하여 바인딩 오류 해결)
+   */
+  function renderAuthView(mode) {
+    currentAuthMode = mode;
+    const authContent = document.getElementById('auth-content');
+    authContent.innerHTML = ''; // 기존 내용 초기화
+
+    let formHtml = '';
+    let handlerId;
+
+    if (mode === 'signin') {
+      formHtml = `
+            <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">로그인</h2>
+            <div class="space-y-4">
+                <input type="text" id="signin-email" placeholder="아이디를 입력하세요"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" value="test@user.com">
+                <input type="password" id="signin-password" placeholder="비밀번호를 입력하세요"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" value="password">
+                <button id="signin-button"
+                        class="w-full btn-primary font-bold py-3 rounded-lg">
+                    로그인
+                </button>
+                <p class="text-center text-sm text-gray-600">
+                    계정이 없으신가요? <a href="#" id="signup-link" class="text-indigo-600 hover:text-indigo-800 font-semibold">회원가입</a>
+                </p>
+            </div>
+          `;
+      handlerId = 'signin-button';
+    } else { // signup
+      formHtml = `
+            <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">회원가입</h2>
+            <div class="space-y-4">
+                <input type="text" id="signup-name" placeholder="이름 (Name)"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="signup-email" placeholder="이메일 (Email)"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="password" id="signup-password" placeholder="비밀번호"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="password" id="signup-password-confirm" placeholder="비밀번호 다시 입력"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button id="signup-button"
+                    class="w-full btn-primary font-bold py-3 rounded-lg">
+                    회원가입
+                </button>
+                <p class="text-center text-sm text-gray-600">
+                    이미 계정이 있으신가요? <a href="#" id="signin-link" class="text-indigo-600 hover:text-indigo-800 font-semibold">로그인</a>
+                </p>
+            </div>
+          `;
+      handlerId = 'signup-button';
+    }
+
+    authContent.innerHTML = formHtml; // HTML 삽입
+
+    // ⭐️ 이벤트 리스너 명시적 바인딩 (문제 해결)
+    if (mode === 'signin') {
+      document.getElementById('signin-button').addEventListener('click', () => {
+        handleAuth('/auth/sign-in', 'signin-email', 'signin-password');
+      });
+      document.getElementById('signup-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        renderAuthView('signup');
+      });
+    } else { // signup
+      document.getElementById('signup-button').addEventListener('click', () => {
+        handleAuth('/auth/sign-up', 'signup-email', 'signup-password', 'signup-name',
+            'signup-password-confirm');
+      });
+      document.getElementById('signin-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        renderAuthView('signin');
+      });
+    }
+  }
+
+  // (renderArticleList, renderArticleDetail, renderCommentSection 함수는 변경 없음)
+
+  function renderArticleList(articles) {
+    const listContainer = document.getElementById('article-list');
+    listContainer.innerHTML = '';
+
+    if (!articles || articles.length === 0) {
+      listContainer.innerHTML = `
+            <div class="text-center p-12 bg-gray-50 rounded-lg">
+                <p class="text-xl font-semibold text-gray-500">아직 게시글이 없습니다.</p>
+                <p class="text-gray-400 mt-2">첫 번째 게시글을 작성해보세요!</p>
+            </div>
+        `;
+      return;
+    }
+
+    articles.forEach(article => {
+      const date = new Date(article.createdAt || Date.now()).toLocaleString('ko-KR', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      listContainer.innerHTML += `
+            <div class="p-4 border border-gray-200 rounded-lg bg-white hover:shadow-md cursor-pointer transition duration-150"
+                 onclick="fetchArticleDetail(${article.id})">
+                <div class="text-lg font-semibold text-gray-800">${article.title}</div>
+                <div class="text-sm text-gray-600 truncate">${article.content}</div>
+                <div class="mt-2 text-xs text-gray-500 flex justify-between pt-2 border-t border-gray-100">
+                    <span>작성자: ${article.authorName || 'user?'}</span>
+                    <span>작성일: ${date}</span>
+                </div>
+            </div>
+        `;
+    });
+  }
+
+  function renderArticleDetail(article) {
+    const detailContainer = document.getElementById('article-detail-content');
+    const controlButtons = document.getElementById('article-control-buttons');
+
+    currentArticleId = article.id;
+    const isAuthor = currentUserId && article.authorId === currentUserId;
+
+    const date = new Date(article.createdAt || Date.now()).toLocaleString('ko-KR', {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit'
+    });
+
+    detailContainer.innerHTML = `
+        <h2 class="text-3xl font-extrabold mb-2 text-gray-800">${article.title}</h2>
+        <div class="text-sm text-gray-500 mb-6 border-b pb-3 flex space-x-4">
+            <span class="font-semibold text-indigo-600">${article.authorName || 'user?'}</span>
+            <span>${date}</span>
+        </div>
+        <div class="text-gray-700 whitespace-pre-wrap min-h-[200px]">${article.content}</div>
+    `;
+
+    controlButtons.innerHTML = '';
+    if (isAuthor) {
+      controlButtons.innerHTML = `
+            <button onclick="showView('update-article-view')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition duration-150">
+                수정
+            </button>
+            <button onclick="deleteArticleHandler(${article.id})" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-150">
+                삭제
+            </button>
+        `;
+    } else if (currentUserId) {
+      controlButtons.innerHTML = `<span class="text-sm text-gray-500 italic">본인 글이 아닙니다. 수정/삭제 버튼이 미노출됩니다.</span>`;
+    }
+
+    fetchCommentsByArticleId(article.id);
+    updateCommentFormVisibility();
+    showView('detail-view');
+  }
+
+  function renderCommentSection(articleId, comments) {
+    const listContainer = document.getElementById('comment-list');
+    const countElement = document.getElementById('comment-count');
+    listContainer.innerHTML = '';
+    countElement.textContent = comments.length;
+
+    if (!comments || comments.length === 0) {
+      listContainer.innerHTML = `
+          <div class="text-center p-8 bg-gray-50 rounded-lg">
+              <p class="text-lg text-gray-500">아직 댓글이 없습니다.</p>
+              <p class="text-sm text-gray-400 mt-1">첫 번째 댓글을 작성해보세요!</p>
+          </div>
+      `;
+      return;
+    }
+
+    comments.forEach(comment => {
+      const date = new Date(comment.createdAt || Date.now()).toLocaleString('ko-KR', {
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      const isEditing = currentEditingCommentId === comment.id;
+      const isAuthor = currentUserId && comment.authorId === currentUserId;
+
+      let contentHtml = '';
+      let controlsHtml = '';
+
+      if (isEditing) {
+        contentHtml = `
+              <textarea id="edit-text-${comment.id}" class="w-full p-2 border rounded-lg h-20 focus:outline-none focus:ring-2 focus:ring-indigo-500">${comment.text}</textarea>
+          `;
+        controlsHtml = `
+              <button onclick="handleCommentUpdateSubmit(${comment.id})" class="text-sm font-medium text-green-600 hover:text-green-800 mr-2">수정 완료</button>
+              <button onclick="cancelCommentEdit()" class="text-sm font-medium text-gray-500 hover:text-gray-700">취소</button>
+          `;
+      } else {
+        contentHtml = `<p class="text-gray-800 whitespace-pre-wrap">${comment.text}</p>`;
+        if (isAuthor) {
+          controlsHtml = `
+                  <button onclick="startCommentEdit(${comment.id}, \`${comment.text.replace(/`/g,
+              "\\`")}\`)" class="text-sm font-medium text-yellow-600 hover:text-yellow-800 mr-2">수정</button>
+                  <button onclick="deleteCommentHandler(${articleId}, ${comment.id})" class="text-sm font-medium text-red-600 hover:text-red-800">삭제</button>
+              `;
+        }
+      }
+
+      listContainer.innerHTML += `
+        <div class="p-3 border rounded-lg bg-white">
+          <div class="flex justify-between items-start mb-2">
+              <span class="font-semibold text-gray-800">${comment.authorName || 'user?'}</span>
+              <span class="text-xs text-gray-400">${date}</span>
+          </div>
+          ${contentHtml}
+          <div class="mt-2 text-xs text-gray-500 flex justify-end items-center">
+            <div class="comment-controls">
+              ${controlsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function updateCommentFormVisibility() {
+    const formArea = document.getElementById('comment-form-area');
+    if (jwtToken) {
+      formArea.style.display = 'block';
+    } else {
+      formArea.style.display = 'none';
+    }
+  }
+
+  // --- 댓글 수정 로직 ---
+
+  function startCommentEdit(commentId, currentText) {
+    currentEditingCommentId = commentId;
+    const commentsJson = document.getElementById('comment-list').dataset.comments;
+    if (commentsJson) {
+      renderCommentSection(currentArticleId, JSON.parse(commentsJson));
+    } else {
+      fetchCommentsByArticleId(currentArticleId);
+    }
+  }
+
+  function cancelCommentEdit() {
+    currentEditingCommentId = null;
+    fetchCommentsByArticleId(currentArticleId);
+  }
+
+  // --- API 핸들러 ---
+
+  async function handleAuth(url, emailId, passwordId, nameId = null, passwordConfirmId = null) {
+    const email = document.getElementById(emailId).value;
+    const password = document.getElementById(passwordId).value;
+    const name = nameId ? document.getElementById(nameId)?.value : null;
+    const passwordConfirm = passwordConfirmId ? document.getElementById(passwordConfirmId)?.value
+        : null;
+
+    if (!email || !password || (nameId && !name)) {
+      console.error("400: 모든 필수 필드를 입력해주세요.");
+      return;
+    }
+    if (passwordConfirmId && (password !== passwordConfirm)) {
+      console.error("400: 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+
+    const body = {email, password};
+    if (name) {
+      body.name = name;
+    }
+    if (passwordConfirm) {
+      body.confirmPassword = passwordConfirm;
+    }
+
+    // ⭐️ 디버그: 요청 전 확인
+    console.log(`Sending API request to: ${url}`);
+    console.log("Body:", body);
+
+    const response = await callApi(url, 'POST', body);
+
+    if (response.status === 200 || response.status === 201) {
+      const token = response.data?.accessToken;
+      if (token) {
+        setToken(token);
+        showView('main-view');
+        console.log("로그인/회원가입 성공!");
+      }
+    } else {
+      console.error(`Error ${response.status}:`, response.data);
+    }
+  }
+
+  // --- 게시글 관련 핸들러 ---
+
+  async function fetchArticles() {
+    const search = document.getElementById('article-search')?.value;
+    const url = search ? `/articles?search=${search}` : '/articles';
+    const response = await callApi(url, 'GET');
+
+    if (response.status === 200) {
+      renderArticleList(response.data.articles || response.data);
+    } else {
+      renderArticleList([]);
+    }
+  }
+
+  async function fetchArticleDetail(id) {
+    const response = await callApi(`/articles/${id}`, 'GET');
+
+    if (response.status === 200) {
+      renderArticleDetail(response.data);
+    } else {
+      showView('main-view');
+      console.error("게시글 상세 로드 실패:", response);
+    }
+  }
+
+  function createArticleHandler() {
+    const title = document.getElementById('article-title').value;
+    const content = document.getElementById('article-content').value;
+    if (!title || !content) {
+      console.error("400: 제목과 내용을 입력해주세요.");
+      return;
+    }
+
+    createArticle({title, content});
+  }
+
+  async function createArticle(body) {
+    const response = await callApi('/articles', 'POST', body);
+
+    if (response.status === 201) {
+      document.getElementById('article-title').value = '';
+      document.getElementById('article-content').value = '';
+      fetchArticleDetail(response.data.id);
+    } else {
+      console.error("게시글 생성 실패:", response);
+    }
+  }
+
+  async function deleteArticleHandler(id) {
+    if (!confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+      return;
+    }
+
+    const response = await callApi(`/articles/${id}`, 'DELETE');
+
+    if (response.status === 204) {
+      console.log("게시글 삭제 성공.");
+      showView('main-view');
+    } else {
+      console.error("게시글 삭제 실패:", response);
+    }
+  }
+
+  // --- 댓글 관련 핸들러 ---
+
+  async function fetchCommentsByArticleId(articleId) {
+    const response = await callApi(`/articles/${articleId}/comments`, 'GET');
+
+    if (response.status === 200) {
+      const comments = response.data.comments || response.data;
+
+      document.getElementById('comment-list').dataset.comments = JSON.stringify(comments);
+      renderCommentSection(articleId, comments);
+    }
+  }
+
+  function createCommentHandler(articleId) {
+    const text = document.getElementById('comment-text-post').value;
+    if (!articleId || !text) {
+      console.error("400: 게시글 ID와 댓글 내용을 입력해주세요.");
+      return;
+    }
+
+    addComment(articleId, {text});
+  }
+
+  async function addComment(articleId, body) {
+    const response = await callApi(`/articles/${articleId}/comments`, 'POST', body);
+
+    if (response.status === 201) {
+      document.getElementById('comment-text-post').value = '';
+      fetchCommentsByArticleId(articleId);
+    } else {
+      console.error("댓글 등록 실패:", response);
+    }
+  }
+
+  async function handleCommentUpdateSubmit(commentId) {
+    const articleId = currentArticleId;
+    const newText = document.getElementById(`edit-text-${commentId}`).value;
+
+    if (!newText) {
+      console.error("400: 댓글 내용을 입력해주세요.");
+      return;
+    }
+
+    // ⭐️ 컨트롤러 경로: /articles/{articleId}/comments/{commentId}
+    const response = await callApi(`/articles/${articleId}/comments/${commentId}`, 'PATCH',
+        {text: newText});
+
+    if (response.status === 200) {
+      currentEditingCommentId = null;
+      fetchCommentsByArticleId(articleId);
+    } else {
+      console.error("댓글 수정 실패:", response);
+    }
+  }
+
+  async function deleteCommentHandler(articleId, commentId) {
+    if (!confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+      return;
+    }
+
+    // ⭐️ 컨트롤러 경로: /articles/{articleId}/comments/{commentId}
+    const response = await callApi(`/articles/${articleId}/comments/${commentId}`, 'DELETE');
+
+    if (response.status === 204) {
+      console.log("댓글 삭제 성공.");
+      fetchCommentsByArticleId(articleId);
+    } else {
+      console.error("댓글 삭제 실패:", response);
+    }
+  }
+
+  // --- 범용 API 호출 함수 ---
+
+  async function callApi(url, method = 'GET', body = null) {
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (jwtToken) {
+      headers['Authorization'] = `Bearer ${jwtToken}`;
+    }
+
+    const options = {
+      method: method,
+      headers: headers,
+    };
+
+    if (body) {
+      options.body = JSON.stringify(body);
+    }
+
+    try {
+      const response = await fetch(url, options);
+
+      // 401 Unauthorized 응답 시 로컬 스토리지 비우기
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('jwt_access_token');
+        jwtToken = '';
+        updateAuthControls();
+        console.error(`Error ${response.status}: 인증 정보 만료 또는 유효하지 않음.`);
+        // return { status: response.status, data: "인증 실패" }; // 데이터를 반환하지 않고 처리 흐름을 중단
+      }
+
+      let data;
+      // 응답 본문이 비어있지 않거나 204(No Content)가 아닐 경우 JSON 파싱 시도
+      if (response.headers.get("content-length") !== "0" && response.status !== 204) {
+        // response.json()이 실패할 경우를 대비해 text로 폴백
+        data = await response.json().catch(() => response.text());
+      } else {
+        data = null; // 204나 내용이 없으면 데이터는 null
+      }
+
+      return {status: response.status, data: data};
+
+    } catch (error) {
+      console.error('Network Error:', error);
+      return {status: 500, data: error.message};
+    }
+  }
+
+  // ⭐️ 초기화 로직: 페이지 로드 시 실행 (자동 전체 조회 포함)
+  (function initializeApp() {
+    const storedToken = localStorage.getItem('jwt_access_token');
+    if (storedToken) {
+      setToken(storedToken);
+    }
+
+    updateAuthControls();
+    showView('main-view');
+  })();
+</script>
 </body>
 </html>

@@ -2,7 +2,7 @@ package spring_practice.simple_board_service.common.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import spring_practice.simple_board_service.presentation.auth.SignupRequest;
+import spring_practice.simple_board_service.presentation.auth.dto.SignupRequest;
 
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, Object> {
 

@@ -1,21 +1,17 @@
-package spring_practice.simple_board_service.presentation.article;
+package spring_practice.simple_board_service.presentation.article.dto;
 
-import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import spring_practice.simple_board_service.domain.article.Article;
 
 @Getter
+@NoArgsConstructor
 public class ArticleCreateRequest {
 
-  private Long userId;
-  private Long articleId;
   private String title;
   private String content;
-  private LocalDateTime createdAt = LocalDateTime.now();
-  private LocalDateTime updatedAt = null;
 
   public Article toEntity() {
-    return new Article(this.getArticleId(), this.getUserId(), this.getTitle(), this.getContent(),
-        this.getCreatedAt(), this.getUpdatedAt());
+    return new Article(this.getTitle(), this.getContent());
   }
 }

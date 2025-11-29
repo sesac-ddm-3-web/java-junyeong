@@ -1,4 +1,4 @@
-package spring_practice.simple_board_service.presentation.auth;
+package spring_practice.simple_board_service.presentation.auth.dto;
 
 import lombok.Getter;
 import spring_practice.simple_board_service.domain.auth.User;

@@ -51,7 +51,6 @@ public class JdbcUserRepository implements UserRepository {
     String sql = "SELECT * FROM user WHERE email = ?";
 
     try {
-      // queryForObject: 결과가 반드시 1개여야 할 때 사용. 0개일 경우 EmptyResultDataAccessException 발생.
       User user = jdbcTemplate.queryForObject(sql, userRowMapper, email);
       return Optional.ofNullable(user);
     } catch (EmptyResultDataAccessException e) {
@@ -64,7 +63,6 @@ public class JdbcUserRepository implements UserRepository {
     String sql = "SELECT * FROM user WHERE id = ?";
 
     try {
-      // queryForObject: 결과가 반드시 1개여야 할 때 사용. 0개일 경우 EmptyResultDataAccessException 발생.
       User user = jdbcTemplate.queryForObject(sql, userRowMapper, userId);
       return Optional.ofNullable(user);
     } catch (EmptyResultDataAccessException e) {
