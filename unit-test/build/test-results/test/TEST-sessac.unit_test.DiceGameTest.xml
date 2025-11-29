@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="sessac.unit_test.DiceGameTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-27T11:15:27.488Z" hostname="junyeong-ui-MacBookPro.local" time="0.019">
+  <properties/>
+  <testcase name="홀수면 실패한다." classname="sessac.unit_test.DiceGameTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

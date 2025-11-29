@@ -1,10 +1,10 @@
-package spring_practice.simple_board_service;
+package sessac.unit_test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SimpleBoardServiceApplicationTests {
+class UnitTestApplicationTests {
 
 	@Test
 	void contextLoads() {
