@@ -14,4 +14,40 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <dependencies>
+
+    <!-- JUnit 5 (JUnit Jupiter API) - 테스트 코드를 작성하기 위한 핵심 라이브러리 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- JUnit 5 (JUnit Jupiter Engine) - 테스트를 실제로 실행하는 런타임 환경 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.10.2</version> <!-- API와 동일한 버전 사용 -->
+      <scope>test</scope>
+    </dependency>
+
+    <!-- AssertJ Core - 가독성 높은 테스트 검증(단언)을 위한 라이브러리 -->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.25.3</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- JUnit 5 Parameterized Tests (선택적: @CsvSource 사용 시 필요) -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
 </project>
