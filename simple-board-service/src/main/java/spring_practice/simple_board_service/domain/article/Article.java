@@ -1,0 +1,37 @@
+package spring_practice.simple_board_service.domain.article;
+
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@AllArgsConstructor
+public class Article {
+
+  @Setter
+  private Long id;
+  @Setter
+  private Long authorId;
+  private String title;
+  private String content;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+
+  public Article(String title, String content) {
+    this.title = title;
+    this.content = content;
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = null;
+  }
+
+  public void update(String title, String content) {
+    this.title = title;
+    this.content = content;
+    this.updatedAt = LocalDateTime.now();
+  }
+
+  public Boolean isAuthorEqual(Long userId) {
+    return this.authorId.equals(userId);
+  }
+}
