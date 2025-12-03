@@ -6,7 +6,7 @@ public class Main {
   public static void main(String[] args) {
     // 1. 객체 생성 및 의존성 주입
     InputView inputView = new InputView();
-    RaceResultView resultView = new RaceResultView();
+    RaceResultView resultView = new ConsoleRaceResultView();
     RandomGenerator randomGenerator = new ZeroToNineGenerator();
 
     // 2. 설정 값 입력 받기
