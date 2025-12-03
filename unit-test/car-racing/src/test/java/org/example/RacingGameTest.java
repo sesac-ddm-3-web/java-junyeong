@@ -36,7 +36,7 @@ class RacingGameTest {
   }
 
 
-     //   ## 2. 핵심 비즈니스 로직 (Car Movement) 검증
+     // 1. 핵심 비즈니스 로직 (Car Movement) 검증
 
   @Test
   @DisplayName("moveCars 호출 시 전진 조건(>=4)에 따라 자동차 위치가 정확히 업데이트되어야 한다.")
@@ -58,7 +58,7 @@ class RacingGameTest {
     assertThat(racers.get(2).getPosition()).as("은서 위치 (8)").isEqualTo(1);
   }
 
-  //  3. 우승자 선정 (Winner Selection) 검증
+  //  2. 우승자 선정 (Winner Selection) 검증
 
   @Test
   @DisplayName("가장 높은 위치에 있는 자동차(들)을 우승자로 정확히 선정해야 한다.")
@@ -81,6 +81,7 @@ class RacingGameTest {
         .containsExactlyInAnyOrder("준영", "은서");
   }
 
+  //  3. 경주에 참여하는 자동차가 0대인 경우
   @Test
   @DisplayName("레이서가 없을 경우 우승자 목록은 비어있어야 한다.")
   void findWinners_noRacers_shouldReturnEmptyList() throws Exception {
