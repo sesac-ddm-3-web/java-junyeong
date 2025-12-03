@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Random;
 
 public class Racing {
+
   private final List<Car> racers;
   private final RaceResultView raceResultView;
   private final RandomGenerator randomGenerator;
 
-  public Racing(List<Car> racers, RaceResultView raceResultView, RandomGenerator randomGenerator ) {
+  public Racing(List<Car> racers, RaceResultView raceResultView, RandomGenerator randomGenerator) {
     this.racers = racers;
     this.raceResultView = raceResultView;
     this.randomGenerator = randomGenerator;
@@ -18,14 +19,14 @@ public class Racing {
 
   public void race(int raceCount) {
     for(int i = 0; i < raceCount; i++) {
-      for(int j=0; j<racers.size(); j++) {
+      for (int j = 0; j < racers.size(); j++) {
         int num = randomGenerator.generate();
-
         raceResultView.update(j, num >= 4);
       }
+      raceResultView.printView();
     }
 
-    raceResultView.printView();
+
   }
 
   private Integer generateRandomZeroToNine() {

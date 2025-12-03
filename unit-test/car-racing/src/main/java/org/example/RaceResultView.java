@@ -28,6 +28,7 @@ public class RaceResultView {
 
 
   public void printView() {
+    System.out.println("==== RACE RESULT VIEW ====\n");
     for(String position : this.view) {
       System.out.println(position);
     }
