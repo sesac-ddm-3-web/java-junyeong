@@ -1,31 +1,22 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import org.example.InputView;
 
 public class Main {
   public static void main(String[] args) {
-    Scanner sc = new Scanner(System.in);
+    // 1. 객체 생성 및 의존성 주입
+    InputView inputView = new InputView();
+    RaceResultView resultView = new RaceResultView();
     RandomGenerator randomGenerator = new ZeroToNineGenerator();
 
-    String[] input = sc.nextLine().split(" ");
-    int carCount = Integer.parseInt(input[0]);
-    int raceCount = Integer.parseInt(input[1]);
+    // 2. 설정 값 입력 받기
+    int[] settings = inputView.getGameSettings();
+    int carCount = settings[0];
+    int raceCount = settings[1];
 
-    String[] readyRacers = {"준영", "현수", "은서", "나현", "찬미", "찬용", "준하", "희찬", "동훈", "지민", "지우", "종균"};
+    // 3. 게임 객체 생성 및 실행
+    RacingGame game = new RacingGame(carCount, resultView, randomGenerator);
 
-    List<Car> racers = new ArrayList<>();
-
-    for(int i = 0; i < carCount; i++) {
-      racers.add(new Car(readyRacers[i]));
-    }
-
-    RaceResultView view = new RaceResultView(carCount);
-
-    Racing racing = new Racing(racers, view, randomGenerator);
-
-    racing.race(raceCount);
+    game.startGame(raceCount);
   }
 }

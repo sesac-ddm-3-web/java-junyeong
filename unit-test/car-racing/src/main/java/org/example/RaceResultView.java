@@ -1,37 +1,30 @@
 package org.example;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RaceResultView {
-  public final List<String> view;
 
-  public RaceResultView(Integer carCount) {
-    this.view = new ArrayList<>();
-    for (int i = 0; i < carCount; i++) {
-      this.view.add("-");
-    }
-  }
+  public RaceResultView() {}
 
-  public void update(int carNumber, boolean isGo) {
-    if (carNumber >= 0 && carNumber < view.size()) {
-      if (isGo) {
-        // 현재 위치 문자열을 가져와 하이픈 하나를 추가합니다.
-        String currentPosition = this.view.get(carNumber);
-        this.view.set(carNumber, currentPosition + "-");
-      }
-      // 후진(isGo가 false)이면 위치를 변경하지 않습니다.
-    } else {
-      throw new IllegalArgumentException("유효하지 않은 자동차 번호입니다: " + carNumber);
-    }
-  }
-
-
-  public void printView() {
-    System.out.println("==== RACE RESULT VIEW ====\n");
-    for(String position : this.view) {
-      System.out.println(position);
+  public void printCurrentResult(List<Car> racers, int raceTurn) {
+    System.out.printf("\n==== %d회차 레이스 결과 ====\n", raceTurn);
+    for (Car car : racers) {
+      System.out.println(formatCarPosition(car));
     }
     System.out.println();
+  }
+
+
+  private String formatCarPosition(Car car) {
+    return car.getName() + " : " + "-".repeat(car.getPosition());
+  }
+
+  public void printWinners(List<Car> winners) {
+    String winnerNames = winners.stream()
+        .map(Car::getName)
+        .reduce((name1, name2) -> name1 + ", " + name2)
+        .orElse("우승자가 없습니다.");
+
+    System.out.println("최종 우승자 : " + winnerNames);
   }
 }
