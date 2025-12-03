@@ -20,7 +20,6 @@ public class ConsoleRaceResultView implements RaceResultView {
 
   @Override
   public void printWinners(List<Car> winners) {
-    // ... 기존 우승자 출력 로직 ...
     String winnerNames = winners.stream()
         .map(Car::getName)
         .collect(Collectors.joining(", "));
