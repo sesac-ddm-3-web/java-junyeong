@@ -1,6 +1,7 @@
-package org.example;
+package org.example.util;
 
 import java.util.List;
+import org.example.generator.RandomGenerator;
 
 public class TestableGenerator implements RandomGenerator {
   private final List<Integer> values;

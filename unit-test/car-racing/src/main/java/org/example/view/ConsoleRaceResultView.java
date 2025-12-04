@@ -1,7 +1,8 @@
-package org.example;
+package org.example.view;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.example.domain.Car;
 
 public class ConsoleRaceResultView implements RaceResultView {
 

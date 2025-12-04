@@ -1,7 +1,9 @@
-package org.example;
+package org.example.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.example.view.RaceResultView;
+import org.example.generator.RandomGenerator;
 
 public class RacingGame {
   private final List<Car> racers;

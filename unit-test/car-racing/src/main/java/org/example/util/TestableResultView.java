@@ -1,7 +1,9 @@
-package org.example;
+package org.example.util;
 
 import java.util.List;
 import java.util.ArrayList;
+import org.example.domain.Car;
+import org.example.view.RaceResultView;
 
 public class TestableResultView implements RaceResultView {
   public record CurrentResultCall(List<Car> racers, int raceTurn) {}

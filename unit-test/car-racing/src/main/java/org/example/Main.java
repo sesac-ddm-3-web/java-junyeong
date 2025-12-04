@@ -1,6 +1,11 @@
 package org.example;
 
-import org.example.InputView;
+import org.example.domain.RacingGame;
+import org.example.generator.RandomGenerator;
+import org.example.generator.ZeroToNineGenerator;
+import org.example.view.ConsoleRaceResultView;
+import org.example.view.InputView;
+import org.example.view.RaceResultView;
 
 public class Main {
   public static void main(String[] args) {
