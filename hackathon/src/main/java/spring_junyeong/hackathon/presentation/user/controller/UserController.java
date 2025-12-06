@@ -3,6 +3,8 @@ package spring_junyeong.hackathon.presentation.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,12 +17,13 @@ import spring_junyeong.hackathon.presentation.user.dto.CheckEmailResponse;
 import spring_junyeong.hackathon.presentation.user.dto.UserResponse;
 
 @RestController
+@RequestMapping("/api/")
 @RequiredArgsConstructor
 public class UserController {
 
   private final UserService userService;
 
-  @RequestMapping(value = "/users", method = RequestMethod.GET)
+  @GetMapping("/users")
   public ResponseEntity<UserResponse> getMyInfo(
       @RequestHeader("Authorization") String authorizationHeader) {
     String accessToken = extractAccessToken(authorizationHeader);
@@ -31,7 +34,7 @@ public class UserController {
 
   }
 
-  @RequestMapping(value = "/users/check-email", method = RequestMethod.POST)
+  @PostMapping("/users/check-email")
   public ResponseEntity<CheckEmailResponse> checkUserEmail(
       @Valid @RequestBody CheckEmailRequest request,
       @RequestHeader("Authorization") String authorizationHeader) {

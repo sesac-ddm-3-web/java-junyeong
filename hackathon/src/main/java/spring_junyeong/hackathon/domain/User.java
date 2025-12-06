@@ -13,23 +13,19 @@ public class User {
   private String profileImageUrl;
   @Setter
   private String email;
-  private String password;
+  private String hashedPassword;
   private LocalDateTime createdAt;
 
-  public User(String name, String email, String password) {
+  public User(String name, String email, String hashedPassword) {
     this.name = name;
     this.email = email;
-    this.password = password;
+    this.hashedPassword = hashedPassword;
     this.createdAt = LocalDateTime.now();
     this.profileImageUrl = "";
   }
 
   public Boolean checkEmail(String email) {
     return this.email.equals(email);
-  }
-
-  public Boolean checkPassword(String password) {
-    return this.password.equals(password);
   }
 
 }

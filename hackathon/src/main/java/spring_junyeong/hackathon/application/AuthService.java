@@ -1,16 +1,16 @@
 package spring_junyeong.hackathon.application;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import spring_junyeong.hackathon.domain.AuthStatus;
+import spring_junyeong.hackathon.domain.TokenService;
 import spring_junyeong.hackathon.domain.User;
 import spring_junyeong.hackathon.global.exception.AccessDeniedException;
 import spring_junyeong.hackathon.global.exception.InvalidPasswordException;
-import spring_junyeong.hackathon.global.exception.UserNotFoundException;
 import spring_junyeong.hackathon.infrastructure.AuthRepository;
 import spring_junyeong.hackathon.infrastructure.UserRepository;
 import spring_junyeong.hackathon.presentation.auth.dto.AuthResponse;
-import spring_junyeong.hackathon.presentation.auth.dto.SignInRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +18,8 @@ public class AuthService {
 
   private final AuthRepository authRepository;
   private final UserRepository userRepository;
+  private final TokenService tokenService;
+  private final PasswordEncoder passwordEncoder;
 
   public AuthResponse createAuth(User user) {
     AuthStatus authStatus = new AuthStatus(user);
@@ -25,21 +27,17 @@ public class AuthService {
     return new AuthResponse(token);
   }
 
-  public AuthResponse signIn(SignInRequest request) {
-    String email = request.getEmail();
-    String password = request.getPassword();
+  public AuthResponse authenticateAndIssueToken(String email, String password) {
+    // 1. User 조회 (UserRepository 사용)
+    User user = userRepository.findByEmail(email);
 
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new UserNotFoundException("[" + email + "] 에 해당하는 유저를 찾지 못했습니다."));
-
-    boolean isPasswordRight = user.checkPassword(password);
-    if (!isPasswordRight) {
-      throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
+    // 2. Password 검증
+    if (!passwordEncoder.matches(password, user.getHashedPassword())) {
+      throw new InvalidPasswordException("비밀번호 불일치");
     }
 
-    AuthStatus newStatus = authRepository.renew(user);
-
-    return new AuthResponse(newStatus.getToken());
+    // 3. Token 발행 (JwtService 사용)
+    return new AuthResponse(tokenService.issueToken(user.getId()));
 
   }
 

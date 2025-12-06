@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,20 +17,20 @@ import spring_junyeong.hackathon.presentation.auth.dto.SignupRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
   private final UserService userService;
   private final AuthService authService;
 
-  @RequestMapping(value = "/sign-in", method = RequestMethod.POST)
+  @PostMapping("/sign-in")
   public ResponseEntity<AuthResponse> signIn(@Valid @RequestBody SignInRequest request) {
-    AuthResponse response = authService.signIn(request);
+    AuthResponse response = authService.authenticateAndIssueToken(request.email(), request.password());
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
-  @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
+  @PostMapping("/sign-up")
   public ResponseEntity<AuthResponse> signUp(@Valid @RequestBody SignupRequest request) {
     AuthResponse response = userService.createUser(request);
 

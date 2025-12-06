@@ -21,7 +21,7 @@ public class UserService {
   private final AuthService authService;
 
   public AuthResponse createUser(SignupRequest request) {
-    User user = new User(request.getName(), request.getEmail(), request.getPassword());
+    User user = new User(request.name(), request.email(), request.password());
     userRepository.add(user);
 
     return authService.createAuth(user);
