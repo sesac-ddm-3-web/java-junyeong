@@ -68,4 +68,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // 6. 다음 필터로 체인 진행
     filterChain.doFilter(request, response);
   }
+
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    String method = request.getMethod();
+
+    return (method.equals("POST") && path.startsWith("/api/auth/sign-up")) ||
+        (method.equals("POST") && path.startsWith("/api/auth/sign-in"));
+  }
+
 }

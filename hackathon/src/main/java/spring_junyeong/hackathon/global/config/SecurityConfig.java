@@ -1,5 +1,6 @@
 package spring_junyeong.hackathon.global.config;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import spring_junyeong.hackathon.presentation.auth.filter.JwtAuthenticationFilter;
 
 @Configuration
@@ -24,7 +28,7 @@ public class SecurityConfig {
   public PasswordEncoder passwordEncoder() {
     // 💡 힌트: PasswordEncoder 인터페이스의 가장 흔하게 사용되는 구현체를 반환하세요.
     // 이는 Bcrypt 해싱 알고리즘을 사용합니다.
-    return new BCryptPasswordEncoder(); // 👈 이 부분을 완성해보세요!
+    return new BCryptPasswordEncoder();
   }
 
   @Bean
@@ -57,6 +61,37 @@ public class SecurityConfig {
         );
 
     return http.build();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+
+    // 💡 힌트: Vercel 주소와 로컬 주소를 명시하거나, 개발 환경에서는 *을 사용합니다.
+    // 실제 운영 환경에서는 보안을 위해 명시적인 출처(Origin)를 사용해야 합니다.
+    configuration.setAllowedOrigins(List.of(
+        "http://localhost:3000", // 프런트엔드 개발 환경
+        "http://localhost:8080" // 백엔드 index.html
+    ));
+
+    // 허용할 HTTP 메서드 (GET, POST, PUT, DELETE 등)
+    configuration.setAllowedMethods(List.of(
+        HttpMethod.GET.name(),
+        HttpMethod.POST.name(),
+        HttpMethod.PUT.name(),
+        HttpMethod.DELETE.name()
+    ));
+
+    // Authorization 헤더를 포함하여 모든 헤더 허용
+    configuration.setAllowedHeaders(List.of("*"));
+
+    // 인증 정보 (쿠키, Authorization 헤더 등)를 포함하여 요청을 보낼 수 있게 허용
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    // 모든 경로 (/**)에 대해 위 설정 적용
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 
 }

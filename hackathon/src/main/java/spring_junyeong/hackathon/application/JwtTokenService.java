@@ -34,27 +34,25 @@ public class JwtTokenService implements TokenService {
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
 
-
   /**
    * 1. Access Token을 발행합니다.
    */
   @Override
   public String issueToken(Long userId) {
 
-    // 1. 토큰 만료 시간 설정 (현재 시간 + 설정된 만료 시간)
+    // 1. 토큰 만료 시간 설정
     Date now = new Date();
     Date validity = new Date(now.getTime() + jwtProperties.expirationTime());
 
-    // 2. 클레임 설정 (Subject에 userId 저장)
-    Claims claims = Jwts.claims().setSubject(String.valueOf(userId)).build();
-    claims.put("userId", userId); // 필요하다면 클레임에 추가 정보 저장
-
-    // 3. 토큰 빌드 및 반환
+    // 2. 토큰 빌드 및 반환
     return Jwts.builder()
-        .setClaims(claims) // 데이터
+        // 💡 수정 지점: setClaims() 대신 setSubject()와 claim()을 빌더 체인에 직접 연결
+        .setSubject(String.valueOf(userId)) // Subject 클레임 설정
+        // .claim("userId", userId) // 필요하다면 claim() 메서드로 커스텀 클레임 추가
+
         .setIssuedAt(now) // 발행 시간
         .setExpiration(validity) // 만료 시간
-        .signWith(key, SignatureAlgorithm.HS256) // 서명 (키와 알고리즘 사용)
+        .signWith(key, SignatureAlgorithm.HS256) // 서명
         .compact(); // 토큰 문자열 생성
   }
 
