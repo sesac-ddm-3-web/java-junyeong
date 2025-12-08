@@ -6,9 +6,7 @@ import spring_junyeong.hackathon.domain.AuthStatus;
 import spring_junyeong.hackathon.domain.User;
 import spring_junyeong.hackathon.global.exception.UserNotFoundException;
 import spring_junyeong.hackathon.infrastructure.AuthRepository;
-import spring_junyeong.hackathon.infrastructure.UserRepository;
 import spring_junyeong.hackathon.presentation.auth.dto.AuthResponse;
-import spring_junyeong.hackathon.presentation.auth.dto.SignupRequest;
 import spring_junyeong.hackathon.presentation.user.dto.CheckEmailResponse;
 import spring_junyeong.hackathon.presentation.user.dto.UserResponse;
 
@@ -20,8 +18,16 @@ public class UserService {
   private final AuthRepository authRepository;
   private final AuthService authService;
 
-  public AuthResponse createUser(SignupRequest request) {
-    User user = new User(request.name(), request.email(), request.password());
+  public AuthResponse registerUser(String email, String name, String password
+  ) {
+//    @TODO
+    // 1. user가 이미 존재하는지 확인
+    // 2. 비밀번호를 해싱
+    // 3. User 엔티티 생성
+    // 4. DB에 영속화
+    // 5. UserId를 반환
+
+    User user = new User(email, name, password);
     userRepository.add(user);
 
     return authService.createAuth(user);
