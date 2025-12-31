@@ -6,7 +6,11 @@ public interface ProductRepository {
     Product add(Product product);
     Product findById(Long id);
     List<Product> findAll();
-    List<Product> findByNameContaining(String name);
-    Product update(Product product);
-    void delete(Long id);
-}
+        List<Product> findByNameContaining(String name);
+    
+        Product update(Product product);
+    
+        void delete(Long id);
+    
+        Product findByIdWithLock(Long id);
+    }

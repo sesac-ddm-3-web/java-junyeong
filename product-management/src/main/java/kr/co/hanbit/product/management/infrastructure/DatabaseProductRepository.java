@@ -91,4 +91,16 @@ public class DatabaseProductRepository implements ProductRepository {
         );
     }
 
+    public Product findByIdWithLock(Long id) {
+        SqlParameterSource namedParameter = new MapSqlParameterSource("id", id);
+
+        Product product = namedParameterJdbcTemplate.queryForObject(
+                "SELECT id, name, price, amount FROM products WHERE id=:id FOR UPDATE",
+                namedParameter,
+                new BeanPropertyRowMapper<>(Product.class)
+        );
+
+        return product;
+    }
+
 }

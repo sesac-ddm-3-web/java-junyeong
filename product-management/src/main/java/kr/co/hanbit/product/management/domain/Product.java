@@ -59,6 +59,13 @@ public class Product {
         return this.name.contains(name);
     }
 
+    public void decreaseAmount(Integer quantity) {
+        if (this.amount < quantity) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
+        this.amount -= quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

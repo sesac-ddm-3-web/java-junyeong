@@ -14,6 +14,9 @@ public class ProductDto {
     @NotNull
     private Integer amount;
 
+    public ProductDto() {
+    }
+
     public ProductDto(String name, int price, int amount) {
         this.name = name;
         this.price = price;
@@ -32,12 +35,23 @@ public class ProductDto {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Integer getPrice() {
         return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public Integer getAmount() {
         return amount;
     }
 
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
 }

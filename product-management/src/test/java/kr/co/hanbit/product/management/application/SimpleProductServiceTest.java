@@ -17,8 +17,8 @@ class SimpleProductServiceTest {
     SimpleProductService simpleProductService;
 
     @Test
-    @DisplayName("상품을 추갛나 후 id로 조회하면 해당 상품이 조회되어야 한다.")
-    void productAddAndFindByIdTest () {
+    @DisplayName("상품을 추가한 후 id로 조회하면 해당 상품이 조회되어야 한다.")
+    void productAddAndFindByIdTest() {
         ProductDto productDto = new ProductDto("연필", 300, 20);
 
         ProductDto savedProductDto = simpleProductService.add(productDto);
@@ -27,9 +27,10 @@ class SimpleProductServiceTest {
 
         ProductDto foundProductDto = simpleProductService.findById(savedProductId);
 
-        System.out.println(savedProductDto.getId() == foundProductDto.getId());
-        System.out.println(savedProductDto.getName() == foundProductDto.getName());
-        System.out.println(savedProductDto.getPrice() == foundProductDto.getPrice());
-        System.out.println(savedProductDto.getAmount() == foundProductDto.getAmount());
-
+        assertNotNull(foundProductDto);
+        assertEquals(savedProductId, foundProductDto.getId());
+        assertEquals("연필", foundProductDto.getName());
+        assertEquals(300, foundProductDto.getPrice());
+        assertEquals(20, foundProductDto.getAmount());
+    }
 }

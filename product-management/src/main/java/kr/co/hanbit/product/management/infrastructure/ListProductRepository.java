@@ -52,4 +52,8 @@ public class ListProductRepository implements ProductRepository {
         products.remove(product);
     }
 
+    public Product findByIdWithLock(Long id) {
+        return findById(id);
+    }
+
 }
